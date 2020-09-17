@@ -28,9 +28,23 @@ namespace VendorOpenAPIWebApp
     {
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void LoginRequestMobileForVendor(string Email_id, string ContactNumber)
+        public void LoginRequestMobileForVendor(string AppName, string UserKey, string UserID, string UserPassword, string EncryptionKey, string Email_id, string ContactNumber)
         {
             CommonCode obj = new CommonCode();
+
+            var encoding2 = new UTF8Encoding();
+
+            byte[] UserIDEncryptReturn = { };
+            byte[] UserPasswordReturn = { };
+
+            string UserIDPass;
+            string UserPasswordPass;
+
+            obj.Encrypt_Vendor(encoding2.GetBytes(UserID), EncryptionKey, ref UserIDEncryptReturn);
+            UserIDPass = Convert.ToBase64String(UserIDEncryptReturn);
+            obj.Encrypt_Vendor(encoding2.GetBytes(UserPassword), EncryptionKey, ref UserPasswordReturn);
+            UserPasswordPass = Convert.ToBase64String(UserPasswordReturn);
+
 
             var _data = new CommonCode.LoginRequestMobileReq();
             CommonCode.LoginRequestMobileRes objFinal = new CommonCode.LoginRequestMobileRes();
@@ -43,12 +57,12 @@ namespace VendorOpenAPIWebApp
             request.Method = "POST";
             request.ContentType = "application/json";
             _data.head.requestCode = "IIFLMarRQLoginForVendor";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+            _data.head.appName = AppName;
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("LoginUserID");
-            _data.head.password = obj.GetAppKeySettings("LoginPwd");
+            _data.head.userId = UserIDPass;
+            _data.head.password = UserPasswordPass;
             _data.body.Email_id = Email_id;
             _data.body.ContactNumber = ContactNumber;
             _data.body.LocalIP = obj.GetIPAddress();
@@ -80,9 +94,8 @@ namespace VendorOpenAPIWebApp
                 var final = value2[0].Split('=');
                 CookieValue = final[1];
             }
-
-            Session["IIFLcookie"] = CookieValue;
-
+            
+            Session["IIFLMarcookie"] = CookieValue;
 
             Context.Response.ContentType = "application/json; charset=utf-8";
             Context.Response.Write(JsonConvert.SerializeObject(ReturnData));
@@ -90,9 +103,24 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void LoginRequestV2(string ClientCode, string Password)
+        public void LoginRequestV2(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode, string Password, string DOB, string EncryptionKey)
         {
             CommonCode obj = new CommonCode();
+
+            var encoding2 = new UTF8Encoding();
+
+            byte[] DOBEncryptReturn = { };
+            byte[] PswdEncryptReturn = { };
+            byte[] CCEncryptReturn = { };
+            string ClientCodePass;
+            string PswdPass;
+            string DOBPass;
+            obj.Encrypt_Vendor(encoding2.GetBytes(ClientCode), EncryptionKey, ref CCEncryptReturn);
+            ClientCodePass = Convert.ToBase64String(CCEncryptReturn);
+            obj.Encrypt_Vendor(encoding2.GetBytes(Password), EncryptionKey, ref PswdEncryptReturn);
+            PswdPass = Convert.ToBase64String(PswdEncryptReturn);
+            obj.Encrypt_Vendor(encoding2.GetBytes(DOB), EncryptionKey, ref DOBEncryptReturn);
+            DOBPass = Convert.ToBase64String(DOBEncryptReturn);
 
             var _data = new CommonCode.LoginRequestV2Req();
             string ReturnData = string.Empty;
@@ -104,15 +132,15 @@ namespace VendorOpenAPIWebApp
             request.ContentType = "application/json";
 
             _data.head.requestCode = "IIFLMarRQLoginForVendor";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+            _data.head.appName = AppName;
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
 
-            _data.body.ClientCode = ClientCode;
-            _data.body.Password = Password;
+            _data.body.ClientCode = ClientCodePass;
+            _data.body.Password = PswdPass;
             _data.body.LocalIP = obj.GetIPAddress();
             _data.body.PublicIP = _data.body.LocalIP;
             _data.body.HDSerialNumber = "";
@@ -120,7 +148,7 @@ namespace VendorOpenAPIWebApp
             _data.body.MachineID = "";
             _data.body.VersionNo = "1.0.16.0";
             _data.body.RequestNo = "1";
-            _data.body.My2PIN = "xk0gmy36O4AOr77fVcBzxQ==";
+            _data.body.My2PIN = DOBPass;
             _data.body.ConnectionType = "1";
 
             postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data);
@@ -151,7 +179,7 @@ namespace VendorOpenAPIWebApp
                 CookieValue = final[1];
             }
 
-            Session["IIFLcookie"] = CookieValue;
+            Session["IIFLMarcookie"] = CookieValue;
 
             Context.Response.ContentType = "application/json; charset=utf-8";
             Context.Response.Write(JsonConvert.SerializeObject(ReturnData));
@@ -159,7 +187,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void OrderBookV1(string ClientCode)
+        public void OrderBookV1(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -171,16 +199,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            string IIFLcookie = "IIFLcookie:" + Session["IIFLcookie"].ToString();
-            request.Headers.Add(IIFLcookie);
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
 
             _data.head.requestCode = "IIFLMarRQOrdBkV1";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
 
             postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data);
@@ -210,7 +243,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void HoldingV2(string ClientCode)
+        public void HoldingV2(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -222,14 +255,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQHoldingV2";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
 
             postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data);
@@ -259,7 +299,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void MarginV3(string ClientCode)
+        public void MarginV3(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -271,14 +311,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQMarginV3";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
 
             postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data);
@@ -308,7 +355,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void OrderBookV2(string ClientCode)
+        public void OrderBookV2(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -320,14 +367,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQOrdBkV2";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
 
             postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data);
@@ -357,7 +411,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void TradeBookV1(string ClientCode)
+        public void TradeBookV1(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -369,14 +423,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQTrdBkV1";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
 
             postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data);
@@ -406,7 +467,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void PreOrdMarginCalculation(string ClientCode, string OrderRequestorCode, string Exch, string ExchType, int ScripCode, string PlaceModifyCancel,
+        public void PreOrdMarginCalculation(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode, string OrderRequestorCode, string Exch, string ExchType, int ScripCode, string PlaceModifyCancel,
             string TransactionType, string AtMarket, double LimitRate, string WithSL, double SLTriggerRate, char IsSLTriggered, long Volume, long OldTradedQty,
             char ProductType, string ExchOrderId, int AppSource)
         {
@@ -420,14 +481,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQPreOrdMarCal";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
             _data.body.OrderRequestorCode = OrderRequestorCode;
             _data.body.Exch = Exch;
@@ -475,7 +543,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void TradeInformation(string ClientCode, List<CommonCode.TradeInformationList> lstData)
+        public void TradeInformation(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode, List<CommonCode.TradeInformationList> lstData)
         {
             CommonCode obj = new CommonCode();
 
@@ -487,14 +555,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQTrdInfo";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
             _data.body.TradeInformationList = lstData;
 
@@ -525,7 +600,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void NetPositionV4(string ClientCode)
+        public void NetPositionV4(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -537,14 +612,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQNetPositionV4";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
 
             postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data);
@@ -574,7 +656,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void NetPositionNetWiseV1(string ClientCode)
+        public void NetPositionNetWiseV1(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -586,14 +668,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQNPNWV1";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
 
             postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data);
@@ -623,7 +712,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void OrderStatus(string ClientCode, List<CommonCode.OrderStatusList> lstData)
+        public void OrderStatus(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode, List<CommonCode.OrderStatusList> lstData)
         {
             CommonCode obj = new CommonCode();
 
@@ -635,14 +724,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQOrdStatus";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.body.ClientCode = ClientCode;
             _data.body.OrdStatusReqList = lstData;
 
@@ -673,7 +769,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void BackoffClientProfile(string ClientCode)
+        public void BackoffClientProfile(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -685,14 +781,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQBackoffClientProfile";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
 
             postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data);
@@ -722,7 +825,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void BackoffEquitytransaction(string ClientCode, string FromDate, string ToDate)
+        public void BackoffEquitytransaction(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode, string FromDate, string ToDate)
         {
             CommonCode obj = new CommonCode();
 
@@ -734,14 +837,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQBackoffEquitytransaction";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
             _data.body.FromDate = FromDate;
             _data.body.ToDate = ToDate;
@@ -773,7 +883,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void BackoffFutureTransaction(string ClientCode, string FromDate, string ToDate)
+        public void BackoffFutureTransaction(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode, string FromDate, string ToDate)
         {
             CommonCode obj = new CommonCode();
 
@@ -785,14 +895,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQBackoffFutureTransaction";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
             _data.body.FromDate = FromDate;
             _data.body.ToDate = ToDate;
@@ -824,7 +941,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void BackoffoptionTransaction(string ClientCode, string FromDate, string ToDate)
+        public void BackoffoptionTransaction(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode, string FromDate, string ToDate)
         {
             CommonCode obj = new CommonCode();
 
@@ -836,14 +953,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQBackoffoptionTransaction";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
             _data.body.FromDate = FromDate;
             _data.body.ToDate = ToDate;
@@ -875,7 +999,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void BackoffMutualFundTransaction(string ClientCode, string FromDate, string ToDate)
+        public void BackoffMutualFundTransaction(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode, string FromDate, string ToDate)
         {
             CommonCode obj = new CommonCode();
 
@@ -887,14 +1011,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQBackoffMutulFundTransaction";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
             _data.body.FromDate = FromDate;
             _data.body.ToDate = ToDate;
@@ -926,7 +1057,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void BackoffLedger(string ClientCode, string FromDate, string ToDate)
+        public void BackoffLedger(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode, string FromDate, string ToDate)
         {
             CommonCode obj = new CommonCode();
 
@@ -938,14 +1069,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQBackoffLedger";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
             _data.body.FromDate = FromDate;
             _data.body.ToDate = ToDate;
@@ -977,7 +1115,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void BackoffDPTransaction(string ClientCode, string FromDate, string ToDate)
+        public void BackoffDPTransaction(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode, string FromDate, string ToDate)
         {
             CommonCode obj = new CommonCode();
 
@@ -989,14 +1127,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQBackoffDPTransaction";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
             _data.body.FromDate = FromDate;
             _data.body.ToDate = ToDate;
@@ -1028,7 +1173,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void BackoffDPHolding(string ClientCode)
+        public void BackoffDPHolding(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -1040,14 +1185,21 @@ namespace VendorOpenAPIWebApp
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers["IIFLcookie"] = Session["IIFLcookie"].ToString();
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
             _data.head.requestCode = "IIFLMarRQBackoffDPHolding";
-            _data.head.key = obj.GetAppKeySettings("HeadKey");
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
             _data.head.appVer = "1.0";
-            _data.head.appName = obj.GetAppKeySettings("AppName");
+
             _data.head.osName = "Android";
-            _data.head.userId = obj.GetAppKeySettings("UserID");
-            _data.head.password = obj.GetAppKeySettings("Pwd");
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
             _data.body.ClientCode = ClientCode;
 
             postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data);
