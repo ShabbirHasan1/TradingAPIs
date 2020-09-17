@@ -12,7 +12,7 @@ Our REST APIs can help you build a complete investment and trading platform in n
  - Flexible REST APIs compatible with multiple languages suited best to your comfort
  
  
-The complete API reference document is available [here](http://images.indiainfoline.com/mailers/landingpage/Trade-API-Custom/Trade-API-Landingpage17Aug/landing-page.html)
+The complete API reference document is available [here](https://api.iiflsecurities.com/)
 
 
 ## Usage
