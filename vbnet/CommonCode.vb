@@ -68,6 +68,8 @@ Public Class CommonCode
         Return strIPAddress
     End Function
 
+
+
     Public Class LoginRequestMobileRes
         Public head As ResHeader = New ResHeader()
         Public body As LoginRequestMobileResBody = New LoginRequestMobileResBody()
@@ -196,6 +198,52 @@ Public Class CommonCode
     Public Class FetchSVDetailsReqBody
         Public Clientid As String
     End Class
+
+    Public Class ReqOrderRequest
+        Public _ReqData As ReqOrderRequestMain = New ReqOrderRequestMain()
+        Public AppSource As Integer
+    End Class
+
+    Public Class ReqOrderRequestMain
+        Public head As ReqHeader = New ReqHeader()
+        Public body As ReqOrderRequestBody = New ReqOrderRequestBody()
+    End Class
+    Public Class ReqOrderRequestBody
+        Public Property ClientCode As String
+        Public Property OrderFor As String
+        Public Property Exchange As Char
+        Public Property ExchangeType As Char
+        Public Property Price As Double
+        Public Property OrderID As Long
+        Public Property OrderType As String
+        Public Property Qty As Long
+        Public Property OrderDateTime As DateTime
+        Public Property ScripCode As Long
+        Public Property AtMarket As Boolean
+        Public Property RemoteOrderID As String
+        Public Property ExchOrderID As String
+        Public Property DisQty As Long
+        Public Property StopLossPrice As Double
+        Public Property IsStopLossOrder As Boolean
+        Public Property IOCOrder As Boolean
+        Public Property IsIntraday As Boolean
+        Public Property ValidTillDate As DateTime
+        Public Property AHPlaced As Char
+        Public Property PublicIP As String
+        Public Property iOrderValidity As OrderValidity
+        Public Property TradedQty As Long
+        Public Property OrderRequesterCode As String
+    End Class
+
+    Public Enum OrderValidity As Int16
+        Day = 0
+        GTD = 1
+        GTC = 2
+        IOC = 3
+        EOS = 4
+        VTD = 5
+        FOK = 6
+    End Enum
 
     Public Class LoginRequestMobileReq
         Public head As ReqHeader = New ReqHeader()

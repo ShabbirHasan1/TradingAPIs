@@ -243,6 +243,85 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public void OrderRequest(string AppName, string UserKey, string ClientCode, string UserID, string UserPassword, string OrderFor, char Exchange, char ExchangeType, double Price, long OrderID, string OrderType, long Qty, long ScripCode, bool AtMarket, string RemoteOrderID, string ExchOrderID, long DisQty, bool IsStopLossOrder, double StopLossPrice, bool IsVTD, bool IOCOrder, bool IsIntraday, string PublicIP, char AHPlaced, CommonCode.OrderValidity iOrderValidity, string OrderRequesterCode, long TradedQty, int AppSource)
+        {
+            var obj = new CommonCode();
+            var _data = new CommonCode.ReqOrderRequest();
+            string ReturnData = string.Empty;
+            string postData = string.Empty;
+            string mobileServiceURL = obj.GetAppKeySettings("ServiceURL");
+            mobileServiceURL = mobileServiceURL + "V1/OrderRequest";
+            HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
+            request.Method = "POST";
+            request.ContentType = "application/json";
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "openapi.indiainfoline.com";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
+            _data._ReqData.head.requestCode = "IIFLMarRQOrdReq";
+            _data._ReqData.head.key = UserKey;
+            _data._ReqData.head.appName = AppName;
+            _data._ReqData.head.appVer = "1.0";
+            _data._ReqData.head.osName = "Android";
+            _data._ReqData.head.userId = UserID;
+            _data._ReqData.head.password = UserPassword;
+            _data._ReqData.body.ClientCode = ClientCode;
+            _data._ReqData.body.OrderFor = OrderFor;
+            _data._ReqData.body.Exchange = Exchange;
+            _data._ReqData.body.ExchangeType = ExchangeType;
+            _data._ReqData.body.Price = Price;
+            _data._ReqData.body.OrderID = OrderID;
+            _data._ReqData.body.OrderType = OrderType;
+            _data._ReqData.body.Qty = Qty;
+            var setting = new JsonSerializerSettings();
+            setting.DateFormatHandling = DateFormatHandling.MicrosoftDateFormat;
+            _data._ReqData.body.OrderDateTime = DateTime.Now;
+            _data._ReqData.body.ScripCode = ScripCode;
+            _data._ReqData.body.AtMarket = AtMarket;
+            _data._ReqData.body.RemoteOrderID = RemoteOrderID;
+            _data._ReqData.body.ExchOrderID = ExchOrderID;
+            _data._ReqData.body.DisQty = DisQty;
+            _data._ReqData.body.StopLossPrice = StopLossPrice;
+            _data._ReqData.body.IsStopLossOrder = IsStopLossOrder;
+            _data._ReqData.body.IOCOrder = IOCOrder;
+            _data._ReqData.body.IsIntraday = IsIntraday;
+            _data._ReqData.body.ValidTillDate = DateTime.Now;
+            _data._ReqData.body.AHPlaced = AHPlaced;
+            _data._ReqData.body.PublicIP = PublicIP;
+            _data._ReqData.body.iOrderValidity = iOrderValidity;
+            _data._ReqData.body.TradedQty = TradedQty;
+            _data._ReqData.body.OrderRequesterCode = OrderRequesterCode;
+            _data.AppSource = AppSource;
+            postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data, setting);
+            var bytes = Encoding.UTF8.GetBytes(postData);
+            request.ContentLength = bytes.Length;
+            using (Stream requestStream = request.GetRequestStream())
+            {
+                requestStream.Write(bytes, 0, bytes.Length);
+                requestStream.Close();
+            }
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new Exception(string.Format("Server error (HTTP {0}: {1}).", response.StatusCode, response.StatusDescription));
+                }
+
+                Stream stream1 = response.GetResponseStream();
+                var sr = new StreamReader(stream1);
+                ReturnData = sr.ReadToEnd();
+            }
+
+            Context.Response.ContentType = "application/json; charset=utf-8";
+            Context.Response.Write(JsonConvert.SerializeObject(ReturnData));
+        }
+        
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public void HoldingV2(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();

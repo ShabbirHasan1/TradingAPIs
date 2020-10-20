@@ -78,7 +78,8 @@ Public Class GeneralMethods
             CookieValue = final(1)
         End Using
 
-        Session("IIFLMarcookie") = CookieValue
+        'Session("IIFLMarcookie") = CookieValue
+        Session("IIFLcookie") = CookieValue
 
         Context.Response.ContentType = "application/json; charset=utf-8"
         Context.Response.Write(JsonConvert.SerializeObject(ReturnData))
@@ -159,7 +160,8 @@ Public Class GeneralMethods
             CookieValue = final(1)
         End Using
 
-        Session("IIFLMarcookie") = CookieValue
+        'Session("IIFLMarcookie") = CookieValue
+        Session("IIFLcookie") = CookieValue
 
         Context.Response.ContentType = "application/json; charset=utf-8"
         Context.Response.Write(JsonConvert.SerializeObject(ReturnData))
@@ -217,6 +219,93 @@ Public Class GeneralMethods
         Context.Response.ContentType = "application/json; charset=utf-8"
         Context.Response.Write(JsonConvert.SerializeObject(ReturnData))
 
+    End Sub
+
+    <WebMethod(EnableSession:=True)>
+    <ScriptMethod(ResponseFormat:=ResponseFormat.Json)>
+    Public Sub OrderRequest(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String, ByVal OrderFor As String,
+        ByVal Exchange As Char, ByVal ExchangeType As Char, ByVal Price As Double, ByVal OrderID As Long, ByVal OrderType As String, ByVal Qty As Long,
+        ByVal ScripCode As Long, ByVal AtMarket As Boolean, ByVal RemoteOrderID As String, ByVal ExchOrderID As String, ByVal DisQty As Long, ByVal IsStopLossOrder As Boolean,
+        ByVal StopLossPrice As Double, ByVal IsVTD As Boolean, ByVal IOCOrder As Boolean, ByVal IsIntraday As Boolean, ByVal PublicIP As String, ByVal AHPlaced As Char,
+        ByVal iOrderValidity As CommonCode.OrderValidity, ByVal OrderRequesterCode As String, ByVal TradedQty As Long, ByVal AppSource As Integer)
+        Dim obj As CommonCode = New CommonCode()
+
+        Dim _data = New CommonCode.ReqOrderRequest()
+        Dim ReturnData As String = String.Empty
+        Dim postData As String = String.Empty
+        Dim mobileServiceURL As String = obj.GetAppKeySettings("ServiceURL")
+        mobileServiceURL = mobileServiceURL & "V1/OrderRequest"
+        Dim request As HttpWebRequest = TryCast(WebRequest.Create(mobileServiceURL), HttpWebRequest)
+        request.Method = "POST"
+        request.ContentType = "application/json"
+
+        Dim container As CookieContainer = New CookieContainer()
+        Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
+        cookie.Domain = "openapi.indiainfoline.com"
+        container.Add(cookie)
+        request.CookieContainer = container
+
+        _data._ReqData.head.requestCode = "IIFLMarRQOrdReq"
+        _data._ReqData.head.key = UserKey
+        _data._ReqData.head.appName = AppName
+        _data._ReqData.head.appVer = "1.0"
+
+        _data._ReqData.head.osName = "Android"
+        _data._ReqData.head.userId = UserID
+        _data._ReqData.head.password = UserPassword
+
+        _data._ReqData.body.ClientCode = ClientCode
+        _data._ReqData.body.OrderFor = OrderFor
+        _data._ReqData.body.Exchange = Exchange
+        _data._ReqData.body.ExchangeType = ExchangeType
+        _data._ReqData.body.Price = Price
+        _data._ReqData.body.OrderID = OrderID
+        _data._ReqData.body.OrderType = OrderType
+        _data._ReqData.body.Qty = Qty
+
+        Dim setting As JsonSerializerSettings = New JsonSerializerSettings
+        setting.DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
+
+        _data._ReqData.body.OrderDateTime = DateTime.Now
+        _data._ReqData.body.ScripCode = ScripCode
+        _data._ReqData.body.AtMarket = AtMarket
+        _data._ReqData.body.RemoteOrderID = RemoteOrderID
+        _data._ReqData.body.ExchOrderID = ExchOrderID
+        _data._ReqData.body.DisQty = DisQty
+        _data._ReqData.body.StopLossPrice = StopLossPrice
+        _data._ReqData.body.IsStopLossOrder = IsStopLossOrder
+        _data._ReqData.body.IOCOrder = IOCOrder
+        _data._ReqData.body.IsIntraday = IsIntraday
+        _data._ReqData.body.ValidTillDate = DateTime.Now
+        _data._ReqData.body.AHPlaced = AHPlaced
+        _data._ReqData.body.PublicIP = PublicIP
+        _data._ReqData.body.iOrderValidity = iOrderValidity
+        _data._ReqData.body.TradedQty = TradedQty
+        _data._ReqData.body.OrderRequesterCode = OrderRequesterCode
+
+        _data.AppSource = AppSource
+        postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data, setting)
+        Dim bytes = Encoding.UTF8.GetBytes(postData)
+        request.ContentLength = bytes.Length
+
+        Using requestStream As Stream = request.GetRequestStream()
+            requestStream.Write(bytes, 0, bytes.Length)
+            requestStream.Close()
+        End Using
+
+        Using response As HttpWebResponse = TryCast(request.GetResponse(), HttpWebResponse)
+
+            If response.StatusCode <> HttpStatusCode.OK Then
+                Throw New Exception(String.Format("Server error (HTTP {0}: {1}).", response.StatusCode, response.StatusDescription))
+            End If
+
+            Dim stream1 As Stream = response.GetResponseStream()
+            Dim sr = New StreamReader(stream1)
+            ReturnData = sr.ReadToEnd()
+        End Using
+
+        Context.Response.ContentType = "application/json; charset=utf-8"
+        Context.Response.Write(JsonConvert.SerializeObject(ReturnData))
     End Sub
 
     <WebMethod(EnableSession:=True)>

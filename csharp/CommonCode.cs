@@ -247,5 +247,55 @@ namespace VendorOpenAPIWebApp
             public string PublicIP { get; set; }
             public string ContactNumber { get; set; }
         }
+
+        public partial class ReqOrderRequest
+        {
+            public ReqOrderRequestMain _ReqData = new ReqOrderRequestMain();
+            public int AppSource;
+        }
+        public partial class ReqOrderRequestMain
+        {
+            public ReqHeader head = new ReqHeader();
+            public ReqOrderRequestBody body = new ReqOrderRequestBody();
+        }
+
+        public partial class ReqOrderRequestBody
+        {
+            public string ClientCode { get; set; }
+            public string OrderFor { get; set; }
+            public char Exchange { get; set; }
+            public char ExchangeType { get; set; }
+            public double Price { get; set; }
+            public long OrderID { get; set; }
+            public string OrderType { get; set; }
+            public long Qty { get; set; }
+            public DateTime OrderDateTime { get; set; }
+            public long ScripCode { get; set; }
+            public bool AtMarket { get; set; }
+            public string RemoteOrderID { get; set; }
+            public string ExchOrderID { get; set; }
+            public long DisQty { get; set; }
+            public double StopLossPrice { get; set; }
+            public bool IsStopLossOrder { get; set; }
+            public bool IOCOrder { get; set; }
+            public bool IsIntraday { get; set; }
+            public DateTime ValidTillDate { get; set; }
+            public char AHPlaced { get; set; }
+            public string PublicIP { get; set; }
+            public OrderValidity iOrderValidity { get; set; }
+            public long TradedQty { get; set; }
+            public string OrderRequesterCode { get; set; }
+        }
+
+        public enum OrderValidity : short
+        {
+            Day = 0,
+            GTD = 1,
+            GTC = 2,
+            IOC = 3,
+            EOS = 4,
+            VTD = 5,
+            FOK = 6
+        }
     }
 }
