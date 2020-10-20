@@ -22,4 +22,4 @@ To begin using this API, Please Signup [here](https://eaccount.indiainfoline.com
 
 ## Contact us
 
-For any queries please contact our Support at: appsupport.broking@iifl.com
+For any queries please contact our Support at: apisupport.broking@iifl.com
