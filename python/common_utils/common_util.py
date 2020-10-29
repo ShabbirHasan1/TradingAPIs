@@ -10,6 +10,21 @@ conf_file_path = dir_path+'/configuration.ini'
 config = configparser.RawConfigParser()
 config.read(conf_file_path)
 
+
+def get_cookie():
+    cookie_path = dir_path+'/cookie.txt'
+    f = open(cookie_path,'r')
+    cookie_ = f.readline()
+    f.close()
+    return cookie_
+
+def write_cookie(cookie):
+    cookie_path = dir_path+'/cookie.txt'
+    f = open(cookie_path,'w')
+    f.write(cookie)
+    f.close()
+
+
 auth = auth.EncryptionClient()
 
 def get_env():

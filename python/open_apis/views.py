@@ -5,13 +5,16 @@ from django.views.decorators.csrf import csrf_exempt
 from common_utils import common_util,ref_strings, custom_exceptions
 import requests as req
 import http.cookiejar
-cookielib = http.cookiejar
 
+
+cookielib = http.cookiejar
 
 
 http = urllib3.PoolManager()
 env = common_util.get_env()
-cookie_ = 'kpkk5weaq3e5opiuetauakry'
+
+cookie_=common_util.get_cookie()
+
 AppSource = env.get('credentials', 'AppSource')
 
 @csrf_exempt
@@ -60,6 +63,8 @@ def loginRequestMobileForVendor(requests):
             if not resp.status_code == 200:
                 raise common_util.custom_exceptions.UserException(ref_strings.Common.bad_response)
             resp = json.loads(resp.text)
+            
+            common_util.write_cookie(session.cookies.get_dict().get('IIFLMarcookie'))
             resp['cookies'] = session.cookies.get_dict()
             return common_util.send_sucess_message(resp)
 
