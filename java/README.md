@@ -11,8 +11,9 @@
 
 
 **You can also import the code straight into your IDE:**
-Spring Tool Suite (STS)
-IntelliJ IDEA
+- Spring Tool Suite (STS)
+- IntelliJ IDEA
+- Eclipse
 
 **How to run this sample:**
 
@@ -22,6 +23,7 @@ IntelliJ IDEA
 2. Import the code straight into your IDE:
 	- Spring Tool Suite (STS)
 	- IntelliJ IDEA
+	- Eclipse
 
 3. Install Mavel dependency
 
