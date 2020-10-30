@@ -44,5 +44,5 @@ Ones project dependency is installed, follow following step to run the program
 1) class/funct.go
 
 
-**All credentials values  **
+**All credentials values**
 1) conf.json
