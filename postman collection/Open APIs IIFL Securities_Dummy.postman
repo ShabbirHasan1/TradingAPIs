@@ -1,0 +1,514 @@
+{
+	"info": {
+		"_postman_id": "f4348c37-79b4-45fc-aa5b-2ea3805b3550",
+		"name": "Open APIs IIFL Securities",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Vendor Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"head\": {\r\n    \"appName\": \"appname\",\r\n    \"appVer\": \"appver\",\r\n    \"key\": \"userkey\",\r\n    \"osName\": \"osName\",\r\n    \"requestCode\": \"IIFLMarRQLoginForVendor\",\r\n    \"userId\": \"encryptedUsedID\",\r\n    \"password\": \"encryptedPassword\"\r\n  },\r\n  \"body\": {\r\n    \"Email_id\": \"emailID\",\r\n    \"LocalIP\": \"123.123.123.123\",\r\n    \"PublicIP\": \"123.123.123.12\",\r\n    \"ContactNumber\": \"contactNumber\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/LoginRequestMobileForVendor"
+			},
+			"response": []
+		},
+		{
+			"name": "Client Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"head\":{\r\n      \"requestCode\":\"IIFLMarRQLoginForVendor\",\r\n      \"key\":\"userKey\",\r\n      \"appVer\":\"appVer\",\r\n      \"appName\":\"appName\",\r\n      \"osName\":\"OsName\",\r\n      \"userId\":\"userID\",\r\n      \"password\":\"password\"\r\n   },\r\n   \"body\":{\r\n      \"ClientCode\":\"encryptedClientCode\",\r\n      \"Password\":\"encryptedPassword\",\r\n      \"HDSerialNumber\":\"asdf\",\r\n      \"MACAddress\":\"asdf\",\r\n      \"MachineID\":\"asfdasdf\",\r\n      \"VersionNo\":\"1.0.16.0\",\r\n      \"RequestNo\":1,\r\n      \"My2PIN\":\"encryptedMy2PIN\",\r\n      \"ConnectionType\":1,\r\n      \"LocalIP\":\"192.168.88.41\",\r\n      \"PublicIP\":\"192.168.88.42\"\r\n   }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/LoginRequest"
+			},
+			"response": []
+		},
+		{
+			"name": "Holding",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQHoldingV2\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/Holding"
+			},
+			"response": []
+		},
+		{
+			"name": "Market Feed",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\",\r\n        \"requestCode\": \"IIFLMarRQMarketFeed\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\",\r\n        \"Count\": \"2\",\r\n        \"MarketFeedData\": [\r\n            {\r\n                \"Exch\": \"N\",\r\n                \"ExchType\": \"C\",\r\n                \"ScripCode\": \"2885\"\r\n            },\r\n            {\r\n                \"Exch\": \"N\",\r\n                \"ExchType\": \"C\",\r\n                \"ScripCode\": \"22\"\r\n            }\r\n        ],\r\n        \"ClientLoginType\": \"0\",\r\n        \"LastRequestTime\": \"/Date(1600248018615)/\",\r\n        \"RefreshRate\": \"H\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/MarketFeed"
+			},
+			"response": []
+		},
+		{
+			"name": "Order Request",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"_ReqData\": {\r\n        \"head\": {\r\n            \"requestCode\": \"IIFLMarRQOrdReq\",\r\n            \"appName\": \"appname\",\r\n            \"appVer\": \"appver\",\r\n            \"key\": \"userkey\",\r\n            \"osName\": \"Android\",\r\n            \"userId\": \"userid\",\r\n            \"password\": \"password\"\r\n        },\r\n        \"body\": {\r\n            \"ClientCode\": \"clientcode\",\r\n            \"OrderFor\": \"P\",\r\n            \"Exchange\": \"N\",\r\n            \"ExchangeType\": \"C\",\r\n            \"Price\": 190,\r\n            \"OrderID\": 1,\r\n            \"OrderType\": \"BUY\",\r\n            \"Qty\": 1,\r\n            \"OrderDateTime\": \"/Date(1601880914379)/\",\r\n            \"ScripCode\": 3045,\r\n            \"AtMarket\": false,\r\n            \"RemoteOrderID\": \"somenumber\",\r\n            \"ExchOrderID\": \"0\",\r\n            \"DisQty\": 0,\r\n            \"IsStopLossOrder\": false,\r\n            \"StopLossPrice\": 0,\r\n            \"IsVTD\": false,\r\n            \"IOCOrder\": false,\r\n            \"IsIntraday\": false,\r\n            \"PublicIP\": \"192.168.84.215\",\r\n            \"AHPlaced\": \"N\",\r\n            \"ValidTillDate\": \"/Date(1602880914379)/\",\r\n            \"iOrderValidity\": 0,\r\n            \"OrderRequesterCode\": \"96131461\",\r\n            \"TradedQty\": 0\r\n        }\r\n    },\r\n    \"AppSource\": 00\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/OrderRequest"
+			},
+			"response": []
+		},
+		{
+			"name": "Order Status",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\",\r\n        \"requestCode\": \"IIFLMarRQOrdStatus\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCoe\",\r\n        \"OrdStatusReqList\": [\r\n            {\r\n                \"Exch\": \"N\",\r\n                \"ExchType\": \"C\",\r\n                \"ScripCode\": 4717,\r\n                \"RemoteOrderID\": \"S123456789123456789\"\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/OrderStatus"
+			},
+			"response": []
+		},
+		{
+			"name": "Trade Information",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\",\r\n        \"requestCode\": \"IIFLMarRQTrdInfo\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\",\r\n        \"TradeInformationList\": [\r\n            {\r\n                \"Exch\": \"B\",\r\n                \"ExchType\": \"C\",\r\n                \"ScripCode\": 500410,\r\n                \"ExchOrderID\": \"1557728588259000015\"\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/TradeInformation"
+			},
+			"response": []
+		},
+		{
+			"name": "Margin",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQMarginV3\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/Margin"
+			},
+			"response": []
+		},
+		{
+			"name": "Order Book",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQOrdBkV2\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/OrderBookV2"
+			},
+			"response": []
+		},
+		{
+			"name": "Trade Book",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQTrdBkV1\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/TradeBook"
+			},
+			"response": []
+		},
+		{
+			"name": "Net Position",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQNetPositionV4\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/NetPosition"
+			},
+			"response": []
+		},
+		{
+			"name": "NetPosition NetWise",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQNPNWV2\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"Clientcode\": \"ClientCode\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/NetPositionNetWise"
+			},
+			"response": []
+		},
+		{
+			"name": "PreOrdMarginCalculation",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQPreOrdMarCal\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"OrderRequestorCode\": \"ClientCode\",\r\n        \"Exch\": \"N\",\r\n        \"ExchType\": \"D\",\r\n        \"ClientCode\": \"ClientCode\",\r\n        \"ScripCode\": \"45609\",\r\n        \"PlaceModifyCancel\": \"M\",\r\n        \"TransactionType\": \"B\",\r\n        \"AtMarket\": \"false\",\r\n        \"LimitRate\": 650,\r\n        \"WithSL\": \"N\",\r\n        \"SLTriggerRate\": 0,\r\n        \"IsSLTriggered\": \"N\",\r\n        \"Volume\": 250,\r\n        \"OldTradedQty\": 0,\r\n        \"ProductType\": \"D\",\r\n        \"ExchOrderId\": \"0\",\r\n        \"ClientIP\": \"21.1.2\",\r\n        \"AppSource\": 00\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/PreOrdMarginCalculation"
+			},
+			"response": []
+		},
+		{
+			"name": "BackoffMutualFundTransaction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQBackoffMutulFundTransaction\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\",\r\n        \"FromDate\": \"20190101\",\r\n        \"ToDate\": \"20201001\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/BackoffMutualFundTransaction"
+			},
+			"response": []
+		},
+		{
+			"name": "BackoffClientProfile",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQBackoffClientProfile\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/BackoffClientProfile"
+			},
+			"response": []
+		},
+		{
+			"name": "BackoffEquitytransaction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQBackoffEquitytransaction\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\",\r\n        \"FromDate\": \"20190101\",\r\n        \"ToDate\": \"20201001\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/BackoffEquitytransaction"
+			},
+			"response": []
+		},
+		{
+			"name": "BackoffFutureTransaction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQBackoffFutureTransaction\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\",\r\n        \"FromDate\": \"20190101\",\r\n        \"ToDate\": \"20201001\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/BackoffFutureTransaction"
+			},
+			"response": []
+		},
+		{
+			"name": "BackoffoptionTransaction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQBackoffoptionTransaction\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\",\r\n        \"FromDate\": \"20190101\",\r\n        \"ToDate\": \"20201001\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/BackoffoptionTransaction"
+			},
+			"response": []
+		},
+		{
+			"name": "BackoffLedger",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQBackoffLedger\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\",\r\n        \"FromDate\": \"20190101\",\r\n        \"ToDate\": \"20201001\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/BackoffLedger"
+			},
+			"response": []
+		},
+		{
+			"name": "BackoffDPTransaction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQBackoffDPTransaction\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\",\r\n        \"FromDate\": \"20190101\",\r\n        \"ToDate\": \"20201001\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/BackoffDPTransaction"
+			},
+			"response": []
+		},
+		{
+			"name": "BackoffDPHolding",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"head\": {\r\n        \"requestCode\": \"IIFLMarRQBackoffDPHolding\",\r\n        \"key\": \"userKey\",\r\n        \"appVer\": \"appVer\",\r\n        \"appName\": \"appName\",\r\n        \"osName\": \"OsName\",\r\n        \"userId\": \"userID\",\r\n        \"password\": \"password\"\r\n    },\r\n    \"body\": {\r\n        \"ClientCode\": \"ClientCode\",\r\n        \"FromDate\": \"20190101\",\r\n        \"ToDate\": \"20201001\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://dataservice.iifl.in/openapi/prod/BackoffDPHolding"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
