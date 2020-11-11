@@ -177,9 +177,9 @@ func NetPositionNetWise(w http.ResponseWriter, r *http.Request) {
 
 	header := Header{AppName: config.AppName, AppVer: config.AppVer, Key: config.Key, OsName: config.OsName, RequestCode: config.RequestCodeNPNWV1, UserID: config.UserID, Password: config.Password}
 
-	body := HoldingBody{ClientCode: ClientCode}
+	body := NetPositionHoldingBody{ClientCode: ClientCode}
 
-	NetPositionNetWiseReq := HoldingRequest{Head: header, Body: body}
+	NetPositionNetWiseReq := NetPositionHoldingRequest{Head: header, Body: body}
 
 	data, _ := json.Marshal(NetPositionNetWiseReq)
 

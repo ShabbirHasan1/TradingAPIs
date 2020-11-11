@@ -60,7 +60,7 @@ func LoginRequest(w http.ResponseWriter, r *http.Request) {
 
 	header := Header{AppName: config.AppName, AppVer: config.AppVer, Key: config.Key, OsName: config.OsName, RequestCode: config.RequestCode, UserID: config.UserID, Password: config.Password}
 
-	body := LoginRequestBody{ClientCode: Encryption("96000000"), Password: "49dKKNv3UAAAAAAAAAAAAA==", HDSerialNumber: "asdf", MACAddress: "asdf", MachineID: "asfdasdf", VersionNo: config.VersionNo, RequestNo: 1, My2PIN: "X8EUGQAAAAAAAAAAAAA/uQ==", ConnectionType: 1, LocalIP: IPadd, PublicIP: IPadd}
+	body := LoginRequestBody{ClientCode: Encryption("{ClientCode}"), Password: "{ClientPassword}", HDSerialNumber: "asdf", MACAddress: "asdf", MachineID: "asfdasdf", VersionNo: config.VersionNo, RequestNo: 1, My2PIN: "{ClientMy2PIN}", ConnectionType: 1, LocalIP: IPadd, PublicIP: IPadd}
 
 	LoginRequestRequest := LoginRequestRequest{Head: header, Body: body}
 

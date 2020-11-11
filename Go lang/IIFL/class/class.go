@@ -53,10 +53,21 @@ type HoldingBody struct {
 	ClientCode string `json:"ClientCode"`
 }
 
+// NetPositionHoldingBody : HoldingBody
+type NetPositionHoldingBody struct {
+	ClientCode string `json:"Clientcode"`
+}
+
 // HoldingRequest : HoldingRequest
 type HoldingRequest struct {
 	Head Header      `json:"head"`
 	Body HoldingBody `json:"body"`
+}
+
+// NetPositionHoldingRequest : HoldingRequest
+type NetPositionHoldingRequest struct {
+	Head Header                 `json:"head"`
+	Body NetPositionHoldingBody `json:"body"`
 }
 
 // OrderRequestBody : OrderRequestBody
