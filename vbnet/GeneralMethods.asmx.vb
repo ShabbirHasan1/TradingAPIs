@@ -88,7 +88,7 @@ Public Class GeneralMethods
 
     <WebMethod(EnableSession:=True)>
     <ScriptMethod(ResponseFormat:=ResponseFormat.Json)>
-    Public Sub LoginRequestV2(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal Password As String, ByVal DOB As String, ByVal UserID As String, ByVal UserPassword As String, ByVal EncryptionKey As String)
+    Public Sub LoginRequest(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal Password As String, ByVal DOB As String, ByVal UserID As String, ByVal UserPassword As String, ByVal EncryptionKey As String)
         Dim obj As CommonCode = New CommonCode()
 
         Dim encoding2 As New System.Text.UTF8Encoding
@@ -106,11 +106,11 @@ Public Class GeneralMethods
         obj.Encrypt_Vendor(encoding2.GetBytes(DOB), EncryptionKey, DOBEncryptReturn)
         DOBPass = Convert.ToBase64String(DOBEncryptReturn)
 
-        Dim _data = New CommonCode.LoginRequestV2Req()
+        Dim _data = New CommonCode.LoginRequestReq()
         Dim ReturnData As String = String.Empty
         Dim postData As String = String.Empty
         Dim mobileServiceURL As String = obj.GetAppKeySettings("ServiceURL")
-        mobileServiceURL = mobileServiceURL & "V2/LoginRequest"
+        mobileServiceURL = mobileServiceURL & "LoginRequest"
         Dim request As HttpWebRequest = TryCast(WebRequest.Create(mobileServiceURL), HttpWebRequest)
         request.Method = "POST"
         request.ContentType = "application/json"
@@ -160,8 +160,7 @@ Public Class GeneralMethods
             CookieValue = final(1)
         End Using
 
-        'Session("IIFLMarcookie") = CookieValue
-        Session("IIFLcookie") = CookieValue
+        Session("IIFLMarcookie") = CookieValue
 
         Context.Response.ContentType = "application/json; charset=utf-8"
         Context.Response.Write(JsonConvert.SerializeObject(ReturnData))
@@ -169,21 +168,21 @@ Public Class GeneralMethods
 
     <WebMethod(EnableSession:=True)>
     <ScriptMethod(ResponseFormat:=ResponseFormat.Json)>
-    Public Sub OrderBookV1(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String)
+    Public Sub OrderBook(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String)
         Dim obj As CommonCode = New CommonCode()
 
         Dim _data = New CommonCode.CommonReq()
         Dim ReturnData As String = String.Empty
         Dim postData As String = String.Empty
         Dim mobileServiceURL As String = obj.GetAppKeySettings("ServiceURL")
-        mobileServiceURL = mobileServiceURL & "V1/OrderBook"
+        mobileServiceURL = mobileServiceURL & "OrderBook"
         Dim request As HttpWebRequest = TryCast(WebRequest.Create(mobileServiceURL), HttpWebRequest)
         request.Method = "POST"
         request.ContentType = "application/json"
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -234,14 +233,14 @@ Public Class GeneralMethods
         Dim ReturnData As String = String.Empty
         Dim postData As String = String.Empty
         Dim mobileServiceURL As String = obj.GetAppKeySettings("ServiceURL")
-        mobileServiceURL = mobileServiceURL & "V1/OrderRequest"
+        mobileServiceURL = mobileServiceURL & "OrderRequest"
         Dim request As HttpWebRequest = TryCast(WebRequest.Create(mobileServiceURL), HttpWebRequest)
         request.Method = "POST"
         request.ContentType = "application/json"
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -310,21 +309,82 @@ Public Class GeneralMethods
 
     <WebMethod(EnableSession:=True)>
     <ScriptMethod(ResponseFormat:=ResponseFormat.Json)>
-    Public Sub HoldingV2(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String)
+    Public Sub MarketFeed(ByVal AppName As String, ByVal UserKey As String, ByVal UserID As String, ByVal UserPassword As String, ByVal ClientCode As String, ByVal Count As Integer, ByVal MarketFeedData As String, ByVal ClientLoginType As Integer, ByVal RefreshRate As String)
         Dim obj As CommonCode = New CommonCode()
+        Dim lstMFN As List(Of CommonCode.MarketFeedNew) = New List(Of CommonCode.MarketFeedNew)()
+        lstMFN = JsonConvert.DeserializeObject(Of List(Of CommonCode.MarketFeedNew))(MarketFeedData)
 
-        Dim _data = New CommonCode.CommonReq()
+        Dim _data = New CommonCode.MarketFeedReq()
         Dim ReturnData As String = String.Empty
         Dim postData As String = String.Empty
         Dim mobileServiceURL As String = obj.GetAppKeySettings("ServiceURL")
-        mobileServiceURL = mobileServiceURL & "V2/Holding"
+        mobileServiceURL = mobileServiceURL & "MarketFeed"
         Dim request As HttpWebRequest = TryCast(WebRequest.Create(mobileServiceURL), HttpWebRequest)
         request.Method = "POST"
         request.ContentType = "application/json"
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
+        container.Add(cookie)
+        request.CookieContainer = container
+
+        _data.head.requestCode = "IIFLMarLOHIO1"
+        _data.head.key = UserKey
+        _data.head.appName = AppName
+        _data.head.appVer = "1.0"
+        _data.head.osName = "Android"
+        _data.head.userId = UserID
+        _data.head.password = UserPassword
+        _data.body.ClientCode = ClientCode
+        _data.body.Count = Count
+        _data.body.MarketFeedData = lstMFN
+        _data.body.ClientLoginType = ClientLoginType
+        Dim setting = New JsonSerializerSettings()
+        setting.DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
+        _data.body.LastRequestTime = Date.Now
+        _data.body.RefreshRate = RefreshRate
+        postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data, setting)
+        Dim bytes = Encoding.UTF8.GetBytes(postData)
+        request.ContentLength = bytes.Length
+
+        Using requestStream As Stream = request.GetRequestStream()
+            requestStream.Write(bytes, 0, bytes.Length)
+            requestStream.Close()
+        End Using
+
+        Using response As HttpWebResponse = TryCast(request.GetResponse(), HttpWebResponse)
+
+            If response.StatusCode <> HttpStatusCode.OK Then
+                Throw New Exception(String.Format("Server error (HTTP {0}: {1}).", response.StatusCode, response.StatusDescription))
+            End If
+
+            Dim stream1 As Stream = response.GetResponseStream()
+            Dim sr = New StreamReader(stream1)
+            ReturnData = sr.ReadToEnd()
+        End Using
+
+        Context.Response.ContentType = "application/json; charset=utf-8"
+        Context.Response.Write(JsonConvert.SerializeObject(ReturnData))
+    End Sub
+
+    <WebMethod(EnableSession:=True)>
+    <ScriptMethod(ResponseFormat:=ResponseFormat.Json)>
+    Public Sub Holding(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String)
+        Dim obj As CommonCode = New CommonCode()
+
+        Dim _data = New CommonCode.CommonReq()
+        Dim ReturnData As String = String.Empty
+        Dim postData As String = String.Empty
+        Dim mobileServiceURL As String = obj.GetAppKeySettings("ServiceURL")
+        mobileServiceURL = mobileServiceURL & "Holding"
+        Dim request As HttpWebRequest = TryCast(WebRequest.Create(mobileServiceURL), HttpWebRequest)
+        request.Method = "POST"
+        request.ContentType = "application/json"
+
+        Dim container As CookieContainer = New CookieContainer()
+        Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -363,21 +423,21 @@ Public Class GeneralMethods
 
     <WebMethod(EnableSession:=True)>
     <ScriptMethod(ResponseFormat:=ResponseFormat.Json)>
-    Public Sub MarginV3(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String)
+    Public Sub Margin(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String)
         Dim obj As CommonCode = New CommonCode()
 
         Dim _data = New CommonCode.CommonReq()
         Dim ReturnData As String = String.Empty
         Dim postData As String = String.Empty
         Dim mobileServiceURL As String = obj.GetAppKeySettings("ServiceURL")
-        mobileServiceURL = mobileServiceURL & "V3/Margin"
+        mobileServiceURL = mobileServiceURL & "Margin"
         Dim request As HttpWebRequest = TryCast(WebRequest.Create(mobileServiceURL), HttpWebRequest)
         request.Method = "POST"
         request.ContentType = "application/json"
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -423,14 +483,14 @@ Public Class GeneralMethods
         Dim ReturnData As String = String.Empty
         Dim postData As String = String.Empty
         Dim mobileServiceURL As String = obj.GetAppKeySettings("ServiceURL")
-        mobileServiceURL = mobileServiceURL & "V2/OrderBook"
+        mobileServiceURL = mobileServiceURL & "OrderBookV2"
         Dim request As HttpWebRequest = TryCast(WebRequest.Create(mobileServiceURL), HttpWebRequest)
         request.Method = "POST"
         request.ContentType = "application/json"
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -469,21 +529,21 @@ Public Class GeneralMethods
 
     <WebMethod(EnableSession:=True)>
     <ScriptMethod(ResponseFormat:=ResponseFormat.Json)>
-    Public Sub TradeBookV1(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String)
+    Public Sub TradeBook(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String)
         Dim obj As CommonCode = New CommonCode()
 
         Dim _data = New CommonCode.CommonReq()
         Dim ReturnData As String = String.Empty
         Dim postData As String = String.Empty
         Dim mobileServiceURL As String = obj.GetAppKeySettings("ServiceURL")
-        mobileServiceURL = mobileServiceURL & "V1/TradeBook"
+        mobileServiceURL = mobileServiceURL & "TradeBook"
         Dim request As HttpWebRequest = TryCast(WebRequest.Create(mobileServiceURL), HttpWebRequest)
         request.Method = "POST"
         request.ContentType = "application/json"
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -536,7 +596,7 @@ Public Class GeneralMethods
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -606,7 +666,7 @@ Public Class GeneralMethods
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -646,21 +706,21 @@ Public Class GeneralMethods
 
     <WebMethod(EnableSession:=True)>
     <ScriptMethod(ResponseFormat:=ResponseFormat.Json)>
-    Public Sub NetPositionV4(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String)
+    Public Sub NetPosition(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String)
         Dim obj As CommonCode = New CommonCode()
 
         Dim _data = New CommonCode.CommonReq()
         Dim ReturnData As String = String.Empty
         Dim postData As String = String.Empty
         Dim mobileServiceURL As String = obj.GetAppKeySettings("ServiceURL")
-        mobileServiceURL = mobileServiceURL & "V4/NetPosition"
+        mobileServiceURL = mobileServiceURL & "NetPosition"
         Dim request As HttpWebRequest = TryCast(WebRequest.Create(mobileServiceURL), HttpWebRequest)
         request.Method = "POST"
         request.ContentType = "application/json"
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -698,25 +758,25 @@ Public Class GeneralMethods
 
     <WebMethod(EnableSession:=True)>
     <ScriptMethod(ResponseFormat:=ResponseFormat.Json)>
-    Public Sub NetPositionNetWiseV1(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String)
+    Public Sub NetPositionNetWise(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String)
         Dim obj As CommonCode = New CommonCode()
 
         Dim _data = New CommonCode.CommonReq()
         Dim ReturnData As String = String.Empty
         Dim postData As String = String.Empty
         Dim mobileServiceURL As String = obj.GetAppKeySettings("ServiceURL")
-        mobileServiceURL = mobileServiceURL & "V1/NetPositionNetWise"
+        mobileServiceURL = mobileServiceURL & "NetPositionNetWise"
         Dim request As HttpWebRequest = TryCast(WebRequest.Create(mobileServiceURL), HttpWebRequest)
         request.Method = "POST"
         request.ContentType = "application/json"
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
-        _data.head.requestCode = "IIFLMarRQNPNWV1"
+        _data.head.requestCode = "IIFLMarRQNPNWV2"
         _data.head.key = UserKey
         _data.head.appName = AppName
         _data.head.appVer = "1.0"
@@ -764,7 +824,7 @@ Public Class GeneralMethods
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -817,7 +877,7 @@ Public Class GeneralMethods
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -869,7 +929,7 @@ Public Class GeneralMethods
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -923,7 +983,7 @@ Public Class GeneralMethods
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -977,7 +1037,7 @@ Public Class GeneralMethods
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -1031,7 +1091,7 @@ Public Class GeneralMethods
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -1085,7 +1145,7 @@ Public Class GeneralMethods
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -1139,7 +1199,7 @@ Public Class GeneralMethods
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 
@@ -1193,7 +1253,7 @@ Public Class GeneralMethods
 
         Dim container As CookieContainer = New CookieContainer()
         Dim cookie As Cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
-        cookie.Domain = "openapi.indiainfoline.com"
+        cookie.Domain = "dataservice.iifl.in"
         container.Add(cookie)
         request.CookieContainer = container
 

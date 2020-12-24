@@ -15,7 +15,7 @@ namespace VendorOpenAPIWebApp
         {
             return ConfigurationManager.AppSettings[sKey].ToString();
         }
-   
+
         public int Encrypt_Vendor(byte[] data, string MyKey, ref byte[] EncData)
         {
             try
@@ -39,11 +39,11 @@ namespace VendorOpenAPIWebApp
                 aes.KeySize = 256;
                 //DESCryptoServiceProvider cryptic = new DESCryptoServiceProvider();
 
-               
+
                 // Comment for below mention line -- A byte array filled with pseudo-random key bytes.
                 aes.IV = keyBuilder.GetBytes(Convert.ToInt32(aes.BlockSize / 8));
                 aes.Key = keyBuilder.GetBytes(Convert.ToInt32(aes.KeySize / 8));
-                
+
                 // Initializes a new instance of the System.Security.Cryptography.CryptoStream class
                 //var cs = new CryptoStream(ms, aes.CreateEncryptor(_key, _iv), CryptoStreamMode.Write);
 
@@ -202,13 +202,13 @@ namespace VendorOpenAPIWebApp
             public string ClientCode { get; set; }
         }
 
-        public class LoginRequestV2Req
+        public class LoginRequestReq
         {
             public ReqHeader head = new ReqHeader();
-            public LoginRequestV2ReqBody body = new LoginRequestV2ReqBody();
+            public LoginRequestReqBody body = new LoginRequestReqBody();
         }
 
-        public class LoginRequestV2ReqBody
+        public class LoginRequestReqBody
         {
             public string ClientCode { get; set; }
             public string Password { get; set; }
@@ -248,6 +248,28 @@ namespace VendorOpenAPIWebApp
             public string ContactNumber { get; set; }
         }
 
+        public class MarketFeedReq
+        {
+            public ReqHeader head = new ReqHeader();
+            public MarketFeedReqBody body = new MarketFeedReqBody();
+        }
+
+        public partial class MarketFeedReqBody
+        {
+            public string ClientCode { get; set; }
+            public int Count { get; set; }
+            public List<MarketFeedNew> MarketFeedData = new List<MarketFeedNew>();
+            public int ClientLoginType { get; set; }
+            public DateTime LastRequestTime { get; set; }
+            public string RefreshRate { get; set; }
+        }
+
+        public class MarketFeedNew
+        {
+            public string Exch { get; set; }
+            public string ExchType { get; set; }
+            public string ScripCode { get; set; }
+        }
         public partial class ReqOrderRequest
         {
             public ReqOrderRequestMain _ReqData = new ReqOrderRequestMain();

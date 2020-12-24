@@ -171,12 +171,12 @@ Public Class CommonCode
         Public Property ClientCode As String
     End Class
 
-    Public Class LoginRequestV2Req
+    Public Class LoginRequestReq
         Public head As ReqHeader = New ReqHeader()
-        Public body As LoginRequestV2ReqBody = New LoginRequestV2ReqBody()
+        Public body As LoginRequestReqBody = New LoginRequestReqBody()
     End Class
 
-    Public Class LoginRequestV2ReqBody
+    Public Class LoginRequestReqBody
         Public Property ClientCode As String
         Public Property Password As String
         Public Property LocalIP As String
@@ -197,6 +197,26 @@ Public Class CommonCode
 
     Public Class FetchSVDetailsReqBody
         Public Clientid As String
+    End Class
+
+    Public Class MarketFeedReq
+        Public head As ReqHeader = New ReqHeader()
+        Public body As MarketFeedReqBody = New MarketFeedReqBody()
+    End Class
+
+    Public Class MarketFeedReqBody
+        Public Property ClientCode As String
+        Public Property Count As Integer
+        Public MarketFeedData As List(Of MarketFeedNew) = New List(Of MarketFeedNew)()
+        Public Property ClientLoginType As Integer
+        Public Property LastRequestTime As Date
+        Public Property RefreshRate As String
+    End Class
+
+    Public Class MarketFeedNew
+        Public Property Exch As String
+        Public Property ExchType As String
+        Public Property ScripCode As String
     End Class
 
     Public Class ReqOrderRequest

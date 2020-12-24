@@ -103,7 +103,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void LoginRequestV2(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode, string Password, string DOB, string EncryptionKey)
+        public void LoginRequest(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode, string Password, string DOB, string EncryptionKey)
         {
             CommonCode obj = new CommonCode();
 
@@ -122,11 +122,11 @@ namespace VendorOpenAPIWebApp
             obj.Encrypt_Vendor(encoding2.GetBytes(DOB), EncryptionKey, ref DOBEncryptReturn);
             DOBPass = Convert.ToBase64String(DOBEncryptReturn);
 
-            var _data = new CommonCode.LoginRequestV2Req();
+            var _data = new CommonCode.LoginRequestReq();
             string ReturnData = string.Empty;
             string postData = string.Empty;
             string mobileServiceURL = obj.GetAppKeySettings("ServiceURL");
-            mobileServiceURL = mobileServiceURL + "V2/LoginRequest";
+            mobileServiceURL = mobileServiceURL + "LoginRequest";
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
@@ -187,7 +187,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void OrderBookV1(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
+        public void OrderBook(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -195,14 +195,14 @@ namespace VendorOpenAPIWebApp
             string ReturnData = string.Empty;
             string postData = string.Empty;
             string mobileServiceURL = obj.GetAppKeySettings("ServiceURL");
-            mobileServiceURL = mobileServiceURL + "V1/OrderBook";
+            mobileServiceURL = mobileServiceURL + "OrderBook";
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -250,14 +250,14 @@ namespace VendorOpenAPIWebApp
             string ReturnData = string.Empty;
             string postData = string.Empty;
             string mobileServiceURL = obj.GetAppKeySettings("ServiceURL");
-            mobileServiceURL = mobileServiceURL + "V1/OrderRequest";
+            mobileServiceURL = mobileServiceURL + "OrderRequest";
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -319,10 +319,75 @@ namespace VendorOpenAPIWebApp
             Context.Response.ContentType = "application/json; charset=utf-8";
             Context.Response.Write(JsonConvert.SerializeObject(ReturnData));
         }
-        
+
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void HoldingV2(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
+        public void MarketFeed(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode,int Count, string MarketFeedData,int ClientLoginType,string RefreshRate)
+        {
+            CommonCode obj = new CommonCode();
+            List<CommonCode.MarketFeedNew> lstMFN = new List<CommonCode.MarketFeedNew>();
+            lstMFN = JsonConvert.DeserializeObject<List<CommonCode.MarketFeedNew>>(MarketFeedData);            
+
+            var _data = new CommonCode.MarketFeedReq();
+            string ReturnData = string.Empty;
+            string postData = string.Empty;
+            string mobileServiceURL = obj.GetAppKeySettings("ServiceURL");
+            mobileServiceURL = mobileServiceURL + "MarketFeed";
+            HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
+            request.Method = "POST";
+            request.ContentType = "application/json";
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "dataservice.iifl.in";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
+            _data.head.requestCode = "IIFLMarLOHIO1";
+            _data.head.key = UserKey;
+            _data.head.appName = AppName;
+            _data.head.appVer = "1.0";
+
+            _data.head.osName = "Android";
+            _data.head.userId = UserID;
+            _data.head.password = UserPassword;
+            _data.body.ClientCode = ClientCode;
+            _data.body.Count = Count;
+            _data.body.MarketFeedData = lstMFN;
+            _data.body.ClientLoginType = ClientLoginType;
+            var setting = new JsonSerializerSettings();
+            setting.DateFormatHandling = DateFormatHandling.MicrosoftDateFormat;
+            _data.body.LastRequestTime = DateTime.Now;
+            _data.body.RefreshRate = RefreshRate;
+
+            postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data, setting);
+            var bytes = Encoding.UTF8.GetBytes(postData);
+            request.ContentLength = bytes.Length;
+            using (Stream requestStream = request.GetRequestStream())
+            {
+                requestStream.Write(bytes, 0, bytes.Length);
+                requestStream.Close();
+            }
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new Exception(string.Format("Server error (HTTP {0}: {1}).", response.StatusCode, response.StatusDescription));
+                }
+
+                Stream stream1 = response.GetResponseStream();
+                var sr = new StreamReader(stream1);
+                ReturnData = sr.ReadToEnd();
+            }
+
+            Context.Response.ContentType = "application/json; charset=utf-8";
+            Context.Response.Write(JsonConvert.SerializeObject(ReturnData));
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public void Holding(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -330,14 +395,14 @@ namespace VendorOpenAPIWebApp
             string ReturnData = string.Empty;
             string postData = string.Empty;
             string mobileServiceURL = obj.GetAppKeySettings("ServiceURL");
-            mobileServiceURL = mobileServiceURL + "V2/Holding";
+            mobileServiceURL = mobileServiceURL + "Holding";
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -378,7 +443,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void MarginV3(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
+        public void Margin(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -386,14 +451,14 @@ namespace VendorOpenAPIWebApp
             string ReturnData = string.Empty;
             string postData = string.Empty;
             string mobileServiceURL = obj.GetAppKeySettings("ServiceURL");
-            mobileServiceURL = mobileServiceURL + "V3/Margin";
+            mobileServiceURL = mobileServiceURL + "Margin";
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -442,14 +507,14 @@ namespace VendorOpenAPIWebApp
             string ReturnData = string.Empty;
             string postData = string.Empty;
             string mobileServiceURL = obj.GetAppKeySettings("ServiceURL");
-            mobileServiceURL = mobileServiceURL + "V2/OrderBook";
+            mobileServiceURL = mobileServiceURL + "OrderBookV2";
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -490,7 +555,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void TradeBookV1(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
+        public void TradeBook(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -498,14 +563,14 @@ namespace VendorOpenAPIWebApp
             string ReturnData = string.Empty;
             string postData = string.Empty;
             string mobileServiceURL = obj.GetAppKeySettings("ServiceURL");
-            mobileServiceURL = mobileServiceURL + "V1/TradeBook";
+            mobileServiceURL = mobileServiceURL + "TradeBook";
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -563,7 +628,7 @@ namespace VendorOpenAPIWebApp
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -637,7 +702,7 @@ namespace VendorOpenAPIWebApp
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -679,7 +744,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void NetPositionV4(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
+        public void NetPosition(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -687,14 +752,14 @@ namespace VendorOpenAPIWebApp
             string ReturnData = string.Empty;
             string postData = string.Empty;
             string mobileServiceURL = obj.GetAppKeySettings("ServiceURL");
-            mobileServiceURL = mobileServiceURL + "V4/NetPosition";
+            mobileServiceURL = mobileServiceURL + "NetPosition";
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -735,7 +800,7 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void NetPositionNetWiseV1(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
+        public void NetPositionNetWise(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode)
         {
             CommonCode obj = new CommonCode();
 
@@ -743,18 +808,18 @@ namespace VendorOpenAPIWebApp
             string ReturnData = string.Empty;
             string postData = string.Empty;
             string mobileServiceURL = obj.GetAppKeySettings("ServiceURL");
-            mobileServiceURL = mobileServiceURL + "V1/NetPositionNetWise";
+            mobileServiceURL = mobileServiceURL + "NetPositionNetWise";
             HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
             request.Method = "POST";
             request.ContentType = "application/json";
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
-            _data.head.requestCode = "IIFLMarRQNPNWV1";
+            _data.head.requestCode = "IIFLMarRQNPNWV2";
             _data.head.key = UserKey;
             _data.head.appName = AppName;
             _data.head.appVer = "1.0";
@@ -806,7 +871,7 @@ namespace VendorOpenAPIWebApp
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -863,7 +928,7 @@ namespace VendorOpenAPIWebApp
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -919,7 +984,7 @@ namespace VendorOpenAPIWebApp
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -977,7 +1042,7 @@ namespace VendorOpenAPIWebApp
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -1035,7 +1100,7 @@ namespace VendorOpenAPIWebApp
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -1093,7 +1158,7 @@ namespace VendorOpenAPIWebApp
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -1151,7 +1216,7 @@ namespace VendorOpenAPIWebApp
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -1209,7 +1274,7 @@ namespace VendorOpenAPIWebApp
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
@@ -1267,7 +1332,7 @@ namespace VendorOpenAPIWebApp
 
             var container = new CookieContainer();
             var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
-            cookie.Domain = "openapi.indiainfoline.com";
+            cookie.Domain = "dataservice.iifl.in";
             container.Add(cookie);
             request.CookieContainer = container;
 
