@@ -309,6 +309,151 @@ Public Class GeneralMethods
 
     <WebMethod(EnableSession:=True)>
     <ScriptMethod(ResponseFormat:=ResponseFormat.Json)>
+    Public Sub AdvanceModifySMOOrder(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String, ByVal OrderRequesterCode As String, ByVal OrderFor As String, ByVal Exchange As Char, ByVal ExchangeType As Char, ByVal Price As Double, ByVal OrderID As Long, ByVal OrderType As String, ByVal Qty As Long, ByVal ScripCode As Long, ByVal AtMarket As Boolean, ByVal RemoteOrderID As String, ByVal ExchOrderID As String, ByVal DisQty As Long, ByVal IsStopLossOrder As Boolean, ByVal StopLossPrice As Double, ByVal IsVTD As Boolean, ByVal IOCOrder As Boolean, ByVal IsIntraday As Boolean, ByVal AHPlaced As Char, ByVal iOrderValidity As CommonCode.OrderValidity, ByVal TrailingSL As Double, ByVal LegType As Integer, ByVal TMOPartnerOrderID As Integer, ByVal AppSource As Integer)
+        Dim obj = New CommonCode()
+        Dim _data = New CommonCode.ReqAdvModifySMOOrderDetails()
+        Dim ReturnData As String = String.Empty
+        Dim postData As String = String.Empty
+        Dim mobileServiceURL As String = obj.GetAppKeySettings("ServiceURL")
+        mobileServiceURL = mobileServiceURL & "AdvanceModifySMOOrder"
+        Dim request As HttpWebRequest = TryCast(WebRequest.Create(mobileServiceURL), HttpWebRequest)
+        request.Method = "POST"
+        request.ContentType = "application/json"
+        Dim container = New CookieContainer()
+        Dim cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
+        cookie.Domain = "dataservice.iifl.in"
+        container.Add(cookie)
+        request.CookieContainer = container
+        _data._ReqData.head.requestCode = "IIFLMarKETANMAR"
+        _data._ReqData.head.key = UserKey
+        _data._ReqData.head.appName = AppName
+        _data._ReqData.head.appVer = "1.0"
+        _data._ReqData.head.osName = "Android"
+        _data._ReqData.head.userId = UserID
+        _data._ReqData.head.password = UserPassword
+        _data._ReqData.body.ClientCode = ClientCode
+        _data._ReqData.body.OrderFor = OrderFor
+        _data._ReqData.body.OrderRequesterCode = OrderRequesterCode
+        _data._ReqData.body.Exchange = Exchange
+        _data._ReqData.body.ExchangeType = ExchangeType
+        _data._ReqData.body.Price = Price
+        _data._ReqData.body.OrderID = OrderID
+        _data._ReqData.body.OrderType = OrderType
+        _data._ReqData.body.Qty = Qty
+        Dim setting = New JsonSerializerSettings()
+        setting.DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
+        _data._ReqData.body.OrderDateTime = Date.Now
+        _data._ReqData.body.ScripCode = ScripCode
+        _data._ReqData.body.AtMarket = AtMarket
+        _data._ReqData.body.RemoteOrderID = RemoteOrderID
+        _data._ReqData.body.ExchOrderID = ExchOrderID
+        _data._ReqData.body.DisQty = DisQty
+        _data._ReqData.body.StopLossPrice = StopLossPrice
+        _data._ReqData.body.IsStopLossOrder = IsStopLossOrder
+        _data._ReqData.body.IOCOrder = IOCOrder
+        _data._ReqData.body.IsIntraday = IsIntraday
+        _data._ReqData.body.ValidTillDate = Date.Now
+        _data._ReqData.body.AHPlaced = AHPlaced
+        _data._ReqData.body.PublicIP = obj.GetIPAddress()
+        _data._ReqData.body.iOrderValidity = iOrderValidity
+        _data._ReqData.body.TrailingSL = TrailingSL
+        _data._ReqData.body.LegType = LegType
+        _data._ReqData.body.TMOPartnerOrderID = TMOPartnerOrderID
+        _data.AppSource = AppSource
+        postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data, setting)
+        Dim bytes = Encoding.UTF8.GetBytes(postData)
+        request.ContentLength = bytes.Length
+
+        Using requestStream As Stream = request.GetRequestStream()
+            requestStream.Write(bytes, 0, bytes.Length)
+            requestStream.Close()
+        End Using
+
+        Using response As HttpWebResponse = TryCast(request.GetResponse(), HttpWebResponse)
+            If response.StatusCode <> HttpStatusCode.OK Then
+                Throw New Exception(String.Format("Server error (HTTP {0}: {1}).", response.StatusCode, response.StatusDescription))
+            End If
+            Dim stream1 As Stream = response.GetResponseStream()
+            Dim sr = New StreamReader(stream1)
+            ReturnData = sr.ReadToEnd()
+        End Using
+
+        Context.Response.ContentType = "application/json; charset=utf-8"
+        Context.Response.Write(JsonConvert.SerializeObject(ReturnData))
+    End Sub
+
+    <WebMethod(EnableSession:=True)>
+    <ScriptMethod(ResponseFormat:=ResponseFormat.Json)>
+    Public Sub PlaceSMOOrder(ByVal AppName As String, ByVal UserKey As String, ByVal ClientCode As String, ByVal UserID As String, ByVal UserPassword As String, ByVal OrderRequesterCode As String, ByVal RequestType As String, ByVal BuySell As String, ByVal Qty As Long, ByVal Exch As String, ByVal ExchType As String, ByVal DisQty As Long, ByVal AtMarket As Boolean, ByVal ExchOrderID As Long, ByVal LimitPriceInitialOrder As Double, ByVal TriggerPriceInitialOrder As Double, ByVal LimitPriceProfitOrder As Double, ByVal LimitPriceForSL As Double, ByVal TriggerPriceForSL As Double, ByVal TrailingSL As Double, ByVal StopLoss As Boolean, ByVal ScripCode As Integer, ByVal OrderFor As String, ByVal UniqueOrderIDNormal As String, ByVal UniqueOrderIDSL As String, ByVal UniqueOrderIDLimit As String, ByVal LocalOrderIDNormal As Long, ByVal LocalOrderIDSL As Long, ByVal LocalOrderIDLimit As Long, ByVal AppSource As Integer)
+        Dim obj = New CommonCode()
+        Dim _data = New CommonCode.ReqPlaceSMOOrderDetails()
+        Dim ReturnData As String = String.Empty
+        Dim postData As String = String.Empty
+        Dim mobileServiceURL As String = obj.GetAppKeySettings("ServiceURL")
+        mobileServiceURL = mobileServiceURL & "PlaceSMOOrder"
+        Dim request As HttpWebRequest = TryCast(WebRequest.Create(mobileServiceURL), HttpWebRequest)
+        request.Method = "POST"
+        request.ContentType = "application/json"
+        Dim container = New CookieContainer()
+        Dim cookie = New Cookie("IIFLMarcookie", Session("IIFLMarcookie").ToString())
+        cookie.Domain = "dataservice.iifl.in"
+        container.Add(cookie)
+        request.CookieContainer = container
+        _data._ReqData.head.requestCode = "IIFLMarKETANMAR"
+        _data._ReqData.head.key = UserKey
+        _data._ReqData.head.appName = AppName
+        _data._ReqData.head.appVer = "1.0"
+        _data._ReqData.head.osName = "Android"
+        _data._ReqData.head.userId = UserID
+        _data._ReqData.head.password = UserPassword
+        _data._ReqData.body.ClientCode = ClientCode
+        _data._ReqData.body.OrderRequesterCode = OrderRequesterCode
+        _data._ReqData.body.Exch = Exch
+        _data._ReqData.body.ExchType = ExchType
+        _data._ReqData.body.DisQty = DisQty
+        _data._ReqData.body.AtMarket = AtMarket
+        _data._ReqData.body.ExchOrderID = ExchOrderID
+        _data._ReqData.body.LimitPriceInitialOrder = LimitPriceInitialOrder
+        _data._ReqData.body.TriggerPriceInitialOrder = TriggerPriceInitialOrder
+        _data._ReqData.body.LimitPriceProfitOrder = LimitPriceProfitOrder
+        _data._ReqData.body.LimitPriceForSL = LimitPriceForSL
+        _data._ReqData.body.TriggerPriceForSL = TriggerPriceForSL
+        _data._ReqData.body.TrailingSL = TrailingSL
+        _data._ReqData.body.StopLoss = StopLoss
+        _data._ReqData.body.ScripCode = ScripCode
+        _data._ReqData.body.OrderFor = OrderFor
+        _data._ReqData.body.UniqueOrderIDNormal = UniqueOrderIDNormal
+        _data._ReqData.body.UniqueOrderIDLimit = UniqueOrderIDLimit
+        _data._ReqData.body.LocalOrderIDNormal = LocalOrderIDNormal
+        _data._ReqData.body.LocalOrderIDSL = LocalOrderIDSL
+        _data._ReqData.body.LocalOrderIDLimit = LocalOrderIDLimit
+        _data._ReqData.body.PublicIP = obj.GetIPAddress()
+        _data.AppSource = AppSource
+        postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data)
+        Dim bytes = Encoding.UTF8.GetBytes(postData)
+        request.ContentLength = bytes.Length
+
+        Using requestStream As Stream = request.GetRequestStream()
+            requestStream.Write(bytes, 0, bytes.Length)
+            requestStream.Close()
+        End Using
+
+        Using response As HttpWebResponse = TryCast(request.GetResponse(), HttpWebResponse)
+            If response.StatusCode <> HttpStatusCode.OK Then
+                Throw New Exception(String.Format("Server error (HTTP {0}: {1}).", response.StatusCode, response.StatusDescription))
+            End If
+            Dim stream1 As Stream = response.GetResponseStream()
+            Dim sr = New StreamReader(stream1)
+            ReturnData = sr.ReadToEnd()
+        End Using
+
+        Context.Response.ContentType = "application/json; charset=utf-8"
+        Context.Response.Write(JsonConvert.SerializeObject(ReturnData))
+    End Sub
+
+
+    <WebMethod(EnableSession:=True)>
+    <ScriptMethod(ResponseFormat:=ResponseFormat.Json)>
     Public Sub MarketFeed(ByVal AppName As String, ByVal UserKey As String, ByVal UserID As String, ByVal UserPassword As String, ByVal ClientCode As String, ByVal Count As Integer, ByVal MarketFeedData As String, ByVal ClientLoginType As Integer, ByVal RefreshRate As String)
         Dim obj As CommonCode = New CommonCode()
         Dim lstMFN As List(Of CommonCode.MarketFeedNew) = New List(Of CommonCode.MarketFeedNew)()

@@ -94,7 +94,7 @@ namespace VendorOpenAPIWebApp
                 var final = value2[0].Split('=');
                 CookieValue = final[1];
             }
-            
+
             Session["IIFLMarcookie"] = CookieValue;
 
             Context.Response.ContentType = "application/json; charset=utf-8";
@@ -322,11 +322,170 @@ namespace VendorOpenAPIWebApp
 
         [WebMethod(EnableSession = true)]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public void MarketFeed(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode,int Count, string MarketFeedData,int ClientLoginType,string RefreshRate)
+        public void AdvanceModifySMOOrder(string AppName, string UserKey, string ClientCode, string UserID, string UserPassword, string OrderRequesterCode, string OrderFor, char Exchange, char ExchangeType, double Price, long OrderID, string OrderType, long Qty, long ScripCode, bool AtMarket, string RemoteOrderID, string ExchOrderID, long DisQty, bool IsStopLossOrder, double StopLossPrice, bool IsVTD, bool IOCOrder, bool IsIntraday, char AHPlaced, CommonCode.OrderValidity iOrderValidity, double TrailingSL, int LegType, int TMOPartnerOrderID, int AppSource)
+        {
+            var obj = new CommonCode();
+            var _data = new CommonCode.ReqAdvModifySMOOrderDetails();
+            string ReturnData = string.Empty;
+            string postData = string.Empty;
+            string mobileServiceURL = obj.GetAppKeySettings("ServiceURL");
+            mobileServiceURL = mobileServiceURL + "AdvanceModifySMOOrder";
+            HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
+            request.Method = "POST";
+            request.ContentType = "application/json";
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "dataservice.iifl.in";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
+            _data._ReqData.head.requestCode = "IIFLMarKETANMAR";
+            _data._ReqData.head.key = UserKey;
+            _data._ReqData.head.appName = AppName;
+            _data._ReqData.head.appVer = "1.0";
+            _data._ReqData.head.osName = "Android";
+            _data._ReqData.head.userId = UserID;
+            _data._ReqData.head.password = UserPassword;
+            _data._ReqData.body.ClientCode = ClientCode;
+            _data._ReqData.body.OrderFor = OrderFor;
+            _data._ReqData.body.OrderRequesterCode = OrderRequesterCode;
+            _data._ReqData.body.Exchange = Exchange;
+            _data._ReqData.body.ExchangeType = ExchangeType;
+            _data._ReqData.body.Price = Price;
+            _data._ReqData.body.OrderID = OrderID;
+            _data._ReqData.body.OrderType = OrderType;
+            _data._ReqData.body.Qty = Qty;
+            var setting = new JsonSerializerSettings();
+            setting.DateFormatHandling = DateFormatHandling.MicrosoftDateFormat;
+            _data._ReqData.body.OrderDateTime = DateTime.Now;
+            _data._ReqData.body.ScripCode = ScripCode;
+            _data._ReqData.body.AtMarket = AtMarket;
+            _data._ReqData.body.RemoteOrderID = RemoteOrderID;
+            _data._ReqData.body.ExchOrderID = ExchOrderID;
+            _data._ReqData.body.DisQty = DisQty;
+            _data._ReqData.body.StopLossPrice = StopLossPrice;
+            _data._ReqData.body.IsStopLossOrder = IsStopLossOrder;
+            _data._ReqData.body.IOCOrder = IOCOrder;
+            _data._ReqData.body.IsIntraday = IsIntraday;
+            _data._ReqData.body.ValidTillDate = DateTime.Now;
+            _data._ReqData.body.AHPlaced = AHPlaced;
+            _data._ReqData.body.PublicIP = obj.GetIPAddress();
+            _data._ReqData.body.iOrderValidity = iOrderValidity;
+            _data._ReqData.body.TrailingSL = TrailingSL;
+            _data._ReqData.body.LegType = LegType;
+            _data._ReqData.body.TMOPartnerOrderID = TMOPartnerOrderID;
+
+            _data.AppSource = AppSource;
+            postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data, setting);
+            var bytes = Encoding.UTF8.GetBytes(postData);
+            request.ContentLength = bytes.Length;
+            using (Stream requestStream = request.GetRequestStream())
+            {
+                requestStream.Write(bytes, 0, bytes.Length);
+                requestStream.Close();
+            }
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new Exception(string.Format("Server error (HTTP {0}: {1}).", response.StatusCode, response.StatusDescription));
+                }
+
+                Stream stream1 = response.GetResponseStream();
+                var sr = new StreamReader(stream1);
+                ReturnData = sr.ReadToEnd();
+            }
+
+            Context.Response.ContentType = "application/json; charset=utf-8";
+            Context.Response.Write(JsonConvert.SerializeObject(ReturnData));
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public void PlaceSMOOrder(string AppName, string UserKey, string ClientCode, string UserID, string UserPassword, string OrderRequesterCode, string RequestType, string BuySell, long Qty, string Exch, string ExchType, long DisQty, bool AtMarket, long ExchOrderID, double LimitPriceInitialOrder, double TriggerPriceInitialOrder, double LimitPriceProfitOrder, double LimitPriceForSL, double TriggerPriceForSL, double TrailingSL, bool StopLoss, int ScripCode, string OrderFor, string UniqueOrderIDNormal, string UniqueOrderIDSL, string UniqueOrderIDLimit, long LocalOrderIDNormal, long LocalOrderIDSL, long LocalOrderIDLimit, int AppSource)
+        {
+            var obj = new CommonCode();
+            var _data = new CommonCode.ReqPlaceSMOOrderDetails();
+            string ReturnData = string.Empty;
+            string postData = string.Empty;
+            string mobileServiceURL = obj.GetAppKeySettings("ServiceURL");
+            mobileServiceURL = mobileServiceURL + "PlaceSMOOrder";
+            HttpWebRequest request = WebRequest.Create(mobileServiceURL) as HttpWebRequest;
+            request.Method = "POST";
+            request.ContentType = "application/json";
+
+            var container = new CookieContainer();
+            var cookie = new Cookie("IIFLMarcookie", Session["IIFLMarcookie"].ToString());
+            cookie.Domain = "dataservice.iifl.in";
+            container.Add(cookie);
+            request.CookieContainer = container;
+
+            _data._ReqData.head.requestCode = "IIFLMarKETANMAR";
+            _data._ReqData.head.key = UserKey;
+            _data._ReqData.head.appName = AppName;
+            _data._ReqData.head.appVer = "1.0";
+            _data._ReqData.head.osName = "Android";
+            _data._ReqData.head.userId = UserID;
+            _data._ReqData.head.password = UserPassword;
+            _data._ReqData.body.ClientCode = ClientCode;
+
+            _data._ReqData.body.OrderRequesterCode = OrderRequesterCode;
+            _data._ReqData.body.Exch = Exch;
+            _data._ReqData.body.ExchType = ExchType;
+            _data._ReqData.body.DisQty = DisQty;
+            _data._ReqData.body.AtMarket = AtMarket;
+            _data._ReqData.body.ExchOrderID = ExchOrderID;
+
+            _data._ReqData.body.LimitPriceInitialOrder = LimitPriceInitialOrder;
+            _data._ReqData.body.TriggerPriceInitialOrder = TriggerPriceInitialOrder;
+            _data._ReqData.body.LimitPriceProfitOrder = LimitPriceProfitOrder;
+            _data._ReqData.body.LimitPriceForSL = LimitPriceForSL;
+            _data._ReqData.body.TriggerPriceForSL = TriggerPriceForSL;
+            _data._ReqData.body.TrailingSL = TrailingSL;
+            _data._ReqData.body.StopLoss = StopLoss;
+            _data._ReqData.body.ScripCode = ScripCode;
+            _data._ReqData.body.OrderFor = OrderFor;
+            _data._ReqData.body.UniqueOrderIDNormal = UniqueOrderIDNormal;
+            _data._ReqData.body.UniqueOrderIDLimit = UniqueOrderIDLimit;
+            _data._ReqData.body.LocalOrderIDNormal = LocalOrderIDNormal;
+            _data._ReqData.body.LocalOrderIDSL = LocalOrderIDSL;
+            _data._ReqData.body.LocalOrderIDLimit = LocalOrderIDLimit;
+            _data._ReqData.body.PublicIP = obj.GetIPAddress();
+            _data.AppSource = AppSource;
+            postData = Newtonsoft.Json.JsonConvert.SerializeObject(_data);
+            var bytes = Encoding.UTF8.GetBytes(postData);
+            request.ContentLength = bytes.Length;
+            using (Stream requestStream = request.GetRequestStream())
+            {
+                requestStream.Write(bytes, 0, bytes.Length);
+                requestStream.Close();
+            }
+
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new Exception(string.Format("Server error (HTTP {0}: {1}).", response.StatusCode, response.StatusDescription));
+                }
+
+                Stream stream1 = response.GetResponseStream();
+                var sr = new StreamReader(stream1);
+                ReturnData = sr.ReadToEnd();
+            }
+
+            Context.Response.ContentType = "application/json; charset=utf-8";
+            Context.Response.Write(JsonConvert.SerializeObject(ReturnData));
+        }
+
+        [WebMethod(EnableSession = true)]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public void MarketFeed(string AppName, string UserKey, string UserID, string UserPassword, string ClientCode, int Count, string MarketFeedData, int ClientLoginType, string RefreshRate)
         {
             CommonCode obj = new CommonCode();
             List<CommonCode.MarketFeedNew> lstMFN = new List<CommonCode.MarketFeedNew>();
-            lstMFN = JsonConvert.DeserializeObject<List<CommonCode.MarketFeedNew>>(MarketFeedData);            
+            lstMFN = JsonConvert.DeserializeObject<List<CommonCode.MarketFeedNew>>(MarketFeedData);
 
             var _data = new CommonCode.MarketFeedReq();
             string ReturnData = string.Empty;

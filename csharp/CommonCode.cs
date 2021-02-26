@@ -270,6 +270,91 @@ namespace VendorOpenAPIWebApp
             public string ExchType { get; set; }
             public string ScripCode { get; set; }
         }
+
+        public partial class ReqPlaceSMOOrderDetails
+        {
+            public ReqPlaceSMOOrder _ReqData = new ReqPlaceSMOOrder();
+            public int AppSource;
+        }
+
+        public partial class ReqPlaceSMOOrder
+        {
+            public ReqHeader head = new ReqHeader();
+            public ReqPlaceSMOOrderMain body = new ReqPlaceSMOOrderMain();
+        }
+
+        public partial class ReqPlaceSMOOrderMain
+        {
+            public string ClientCode { get; set; }
+            public string OrderRequesterCode { get; set; }
+            public char RequestType { get; set; }
+            public string BuySell { get; set; }
+            public long Qty { get; set; }
+            public string Exch { get; set; }
+            public string ExchType { get; set; }
+            public long DisQty { get; set; }
+            public bool AtMarket { get; set; }
+            public long ExchOrderID { get; set; }
+            public double LimitPriceInitialOrder { get; set; }
+            public double TriggerPriceInitialOrder { get; set; }
+            public double LimitPriceProfitOrder { get; set; }
+            public double LimitPriceForSL { get; set; }
+            public double TriggerPriceForSL { get; set; }
+            public double TrailingSL { get; set; }
+            public Boolean StopLoss { get; set; }
+            public int ScripCode { get; set; }
+            public string OrderFor { get; set; }
+            public string UniqueOrderIDNormal { get; set; }
+            public string UniqueOrderIDSL { get; set; }
+            public string UniqueOrderIDLimit { get; set; }
+            public long LocalOrderIDNormal { get; set; }
+            public long LocalOrderIDSL { get; set; }
+            public long LocalOrderIDLimit { get; set; }
+            public string PublicIP { get; set; }
+        }
+
+        public partial class ReqAdvModifySMOOrderDetails
+        {
+            public ReqAdvModifySMOOrder _ReqData = new ReqAdvModifySMOOrder();
+            public int AppSource;
+        }
+
+        public partial class ReqAdvModifySMOOrder
+        {
+            public ReqHeader head = new ReqHeader();
+            public ReqAdvanceModifySMOOrderMain body = new ReqAdvanceModifySMOOrderMain();
+        }
+
+        public partial class ReqAdvanceModifySMOOrderMain
+        {
+            public string ClientCode { get; set; }
+            public string OrderRequesterCode { get; set; }
+            public string OrderFor { get; set; }
+            public char Exchange { get; set; }
+            public char ExchangeType { get; set; }
+            public double Price { get; set; }
+            public long OrderID { get; set; }
+            public string OrderType { get; set; }
+            public long Qty { get; set; }
+            public DateTime OrderDateTime { get; set; }
+            public long ScripCode { get; set; }
+            public bool AtMarket { get; set; }
+            public string RemoteOrderID { get; set; }
+            public string ExchOrderID { get; set; }
+            public long DisQty { get; set; }
+            public double StopLossPrice { get; set; }
+            public bool IsStopLossOrder { get; set; }
+            public bool IOCOrder { get; set; }
+            public bool IsIntraday { get; set; }
+            public DateTime ValidTillDate { get; set; }
+            public char AHPlaced { get; set; }
+            public string PublicIP { get; set; }
+            public OrderValidity iOrderValidity { get; set; }
+            public double TrailingSL { get; set; }
+            public int LegType { get; set; }
+            public int TMOPartnerOrderID { get; set; }
+        }
+
         public partial class ReqOrderRequest
         {
             public ReqOrderRequestMain _ReqData = new ReqOrderRequestMain();

@@ -219,6 +219,84 @@ Public Class CommonCode
         Public Property ScripCode As String
     End Class
 
+    Partial Public Class ReqAdvModifySMOOrderDetails
+        Public _ReqData As ReqAdvModifySMOOrder = New ReqAdvModifySMOOrder()
+        Public AppSource As Integer
+    End Class
+
+    Partial Public Class ReqAdvModifySMOOrder
+        Public head As ReqHeader = New ReqHeader()
+        Public body As ReqAdvanceModifySMOOrderMain = New ReqAdvanceModifySMOOrderMain()
+    End Class
+
+    Partial Public Class ReqAdvanceModifySMOOrderMain
+        Public Property ClientCode As String
+        Public Property OrderRequesterCode As String
+        Public Property OrderFor As String
+        Public Property Exchange As Char
+        Public Property ExchangeType As Char
+        Public Property Price As Double
+        Public Property OrderID As Long
+        Public Property OrderType As String
+        Public Property Qty As Long
+        Public Property OrderDateTime As Date
+        Public Property ScripCode As Long
+        Public Property AtMarket As Boolean
+        Public Property RemoteOrderID As String
+        Public Property ExchOrderID As String
+        Public Property DisQty As Long
+        Public Property StopLossPrice As Double
+        Public Property IsStopLossOrder As Boolean
+        Public Property IOCOrder As Boolean
+        Public Property IsIntraday As Boolean
+        Public Property ValidTillDate As Date
+        Public Property AHPlaced As Char
+        Public Property PublicIP As String
+        Public Property iOrderValidity As OrderValidity
+        Public Property TrailingSL As Double
+        Public Property LegType As Integer
+        Public Property TMOPartnerOrderID As Integer
+    End Class
+
+    Partial Public Class ReqPlaceSMOOrderDetails
+        Public _ReqData As ReqPlaceSMOOrder = New ReqPlaceSMOOrder()
+        Public AppSource As Integer
+    End Class
+
+    Partial Public Class ReqPlaceSMOOrder
+        Public head As ReqHeader = New ReqHeader()
+        Public body As ReqPlaceSMOOrderMain = New ReqPlaceSMOOrderMain()
+    End Class
+
+    Partial Public Class ReqPlaceSMOOrderMain
+        Public Property ClientCode As String
+        Public Property OrderRequesterCode As String
+        Public Property RequestType As Char
+        Public Property BuySell As String
+        Public Property Qty As Long
+        Public Property Exch As String
+        Public Property ExchType As String
+        Public Property DisQty As Long
+        Public Property AtMarket As Boolean
+        Public Property ExchOrderID As Long
+        Public Property LimitPriceInitialOrder As Double
+        Public Property TriggerPriceInitialOrder As Double
+        Public Property LimitPriceProfitOrder As Double
+        Public Property LimitPriceForSL As Double
+        Public Property TriggerPriceForSL As Double
+        Public Property TrailingSL As Double
+        Public Property StopLoss As Boolean
+        Public Property ScripCode As Integer
+        Public Property OrderFor As String
+        Public Property UniqueOrderIDNormal As String
+        Public Property UniqueOrderIDSL As String
+        Public Property UniqueOrderIDLimit As String
+        Public Property LocalOrderIDNormal As Long
+        Public Property LocalOrderIDSL As Long
+        Public Property LocalOrderIDLimit As Long
+        Public Property PublicIP As String
+    End Class
+
     Public Class ReqOrderRequest
         Public _ReqData As ReqOrderRequestMain = New ReqOrderRequestMain()
         Public AppSource As Integer
