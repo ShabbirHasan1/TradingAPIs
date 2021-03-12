@@ -27,7 +27,7 @@ class CommanCurlController
     /**
       * Call API by curl
       * @param Request $request
-      * @author 5paisa. <https://www.5paisa.com/developerapi>
+      * @author IIFLSecurities. <https://api.iiflsecurities.com/>
       * @return string
       */
     public function callApi($apiMethod, $apiUrl, $requestData, $headerData = array())
