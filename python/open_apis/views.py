@@ -238,6 +238,170 @@ def OrderRequest(requests):
         print(error)
         return common_util.send_error_message()
 
+@csrf_exempt
+def PlaceSMOOrder(requests):
+    try:
+        if requests.method == 'POST':
+            post_data = json.loads(requests.body)
+
+            UserKey = env.get('credentials', 'UserKey')
+            AppName = env.get('credentials', 'AppName')
+            AppSource = env.get('credentials', 'AppSource')
+            UserId = env.get('credentials', 'UserId')
+            Password = env.get('credentials', 'Password')
+            EncryKey = env.get('credentials', 'EncryKey')
+            OAS_key = env.get('credentials', 'Ocp-Apim-Subscription-Key')
+            
+            payload = {
+                "p_data" : {
+                    "head": {
+                            "requestCode": "IIFLMarRQPSMOOrder",
+                            "key": UserKey,
+                            "appVer": "1.0",
+                            "appName": AppName,
+                            "osName": "Android",
+                            "userId": UserId,
+                            "password": Password
+                        },
+                    "body": {
+                            "ClientCode": post_data.get('ClientCode'),
+                            "OrderRequesterCode": post_data.get('ClientCode'),
+                            "RequestType": post_data.get('RequestType'),
+                            "BuySell": post_data.get('BuySell'),
+                            "Qty": post_data.get('Qty'),
+                            "Exch": post_data.get('Exch'),
+                            "ExchType": post_data.get('ExchType'),
+                            "DisQty":post_data.get('DisQty'),
+                            "AtMarket": post_data.get('AtMarket', 'false'), #false --> limit order true --> market order                            
+                            "ExchOrderID":post_data.get('ExchOrderID'),
+                            "LimitPriceInitialOrder":post_data.get('LimitPriceInitialOrder'),
+                            "TriggerPriceInitialOrder":post_data.get('TriggerPriceInitialOrder'),
+                            "LimitPriceProfitOrder":post_data.get('LimitPriceProfitOrder'),
+                            "LimitPriceForSL":post_data.get('LimitPriceForSL'),
+                            "TriggerPriceForSL":post_data.get('TriggerPriceForSL'),
+                            "TrailingSL":post_data.get('TrailingSL'),
+                            "StopLoss": post_data.get('AtMarket', 'false'),
+                            "OrderFor": post_data.get('OrderFor'),
+                            "UniqueOrderIDNormal":post_data.get('UniqueOrderIDNormal'),
+                            "UniqueOrderIDSL":post_data.get('UniqueOrderIDSL'),
+                            "UniqueOrderIDLimit":post_data.get('UniqueOrderIDLimit'),
+                            "LocalOrderIDNormal":post_data.get('LocalOrderIDNormal'),
+                            "LocalOrderIDSL":post_data.get('LocalOrderIDSL'),
+                            "LocalOrderIDLimit":post_data.get('LocalOrderIDLimit'),
+                            "PublicIP": "192.168.84.215",
+                    }
+            },
+                "AppSource": int(AppSource)
+            }
+            print (json.dumps(payload))
+            url = env.get('urls', 'PlaceSMOOrder')
+            
+            header = {
+                "Content-Type": "application/json",
+                "Ocp-Apim-Subscription-Key": OAS_key
+            }
+
+            cookies = req.cookies.RequestsCookieJar()
+            cookies.set('IIFLMarcookie', cookie_, domain = 'dataservice.iifl.in')
+            resp = req.post(url = url, headers = header, data = json.dumps(payload), cookies = cookies)
+
+            if not resp.status_code == 200:
+                raise common_util.custom_exceptions.UserException(ref_strings.Common.bad_response)
+
+            resp = json.loads(resp.text)
+            return common_util.send_sucess_message(resp)
+
+    except custom_exceptions.UserException as e:
+        return common_util.send_sucess_message({'msg': str(e)})
+    except Exception as e:
+        error = common_util.get_error_traceback(sys, e)
+        print(error)
+        return common_util.send_error_message()
+
+@csrf_exempt
+def AdvanceModifySMOOrder(requests):
+    try:
+        if requests.method == 'POST':
+            post_data = json.loads(requests.body)
+
+            UserKey = env.get('credentials', 'UserKey')
+            AppName = env.get('credentials', 'AppName')
+            AppSource = env.get('credentials', 'AppSource')
+            UserId = env.get('credentials', 'UserId')
+            Password = env.get('credentials', 'Password')
+            EncryKey = env.get('credentials', 'EncryKey')
+            OAS_key = env.get('credentials', 'Ocp-Apim-Subscription-Key')
+            
+            payload = {
+                "p_Data" : {
+                    "head": {
+                            "requestCode": "IIFLMarRQAMSMOOrder",
+                            "key": UserKey,
+                            "appVer": "1.0",
+                            "appName": AppName,
+                            "osName": "Android",
+                            "userId": UserId,
+                            "password": Password
+                        },
+                    "body": {
+                            "ClientCode": post_data.get('ClientCode'),
+                            "OrderRequesterCode": post_data.get('ClientCode'),
+                            "OrderFor": post_data.get('OrderFor'),
+                            "Exchange": post_data.get('Exchange'),
+                            "ExchangeType": post_data.get('ExchangeType'),
+                            "Price":post_data.get('Price'),
+                            "OrderID":3,
+                            "Qty": post_data.get('Qty'),
+                            "OrderDateTime": '/Date('+str(common_util.time_milli_second()) + ')/',
+                            "ScripCode": post_data.get('ScripCode'), #stock code
+
+                            "AtMarket": post_data.get('AtMarket', 'false'), #false --> limit order true --> market order
+                            "RemoteOrderID": "s000220360", ##unique id for each order
+
+                            "ExchOrderID": "0",  #Send 0 for fresh order and for modify cancel send the exchange order id received from exchange.
+                            "DisQty": post_data.get('DisQty'), #display qty 
+                            
+                            "StopLossPrice": post_data.get('StopLossPrice'),  #should be checked outside before implementing here
+                            "IsStopLossOrder": post_data.get('IsStopLossOrder', 'false'),
+
+                            "IOCOrder": post_data.get('IOCOrder', 'false'),
+                            "IsIntraday": post_data.get('IsIntraday', 'false'),
+
+                            "ValidTillDate":   '/Date('+str(common_util.time_milli_second(expiry_time=True)) + ')/',
+                            "PublicIP": "192.168.84.215",
+                            "iOrderValidity": post_data.get('iOrderValidity', 0),
+                            "AHPlaced": post_data.get('AHPlaced'),
+                            "TrailingSL": post_data.get('TrailingSL'),
+                            "LegType": post_data.get('LegType'),
+                            "TMOPartnerOrderID":post_data.get('TMOPartnerOrderID')
+                    }
+            },
+                "AppSource": int(AppSource)
+            }
+            print (json.dumps(payload))
+            url = env.get('urls', 'AdvanceModifySMOOrder')
+            
+            header = {
+                "Content-Type": "application/json",
+                "Ocp-Apim-Subscription-Key": OAS_key
+            }
+
+            cookies = req.cookies.RequestsCookieJar()
+            cookies.set('IIFLMarcookie', cookie_, domain = 'dataservice.iifl.in')
+            resp = req.post(url = url, headers = header, data = json.dumps(payload), cookies = cookies)
+
+            if not resp.status_code == 200:
+                raise common_util.custom_exceptions.UserException(ref_strings.Common.bad_response)
+
+            resp = json.loads(resp.text)
+            return common_util.send_sucess_message(resp)
+
+    except custom_exceptions.UserException as e:
+        return common_util.send_sucess_message({'msg': str(e)})
+    except Exception as e:
+        error = common_util.get_error_traceback(sys, e)
+        print(error)
+        return common_util.send_error_message()
 
 @csrf_exempt
 def HoldingV2(requests):

@@ -21,7 +21,7 @@ public class Exchange {
 	private String orderStatus = "OrderStatus";
 	private String tradeInformation = "TradeInformation";
 	private String margin = "Margin";
-	private String orderBook = "OrderBook";
+	private String orderBook = "OrderBookV2";
 	private String tradeBook = "TradeBook";
 	private String preOrdMarginCalculation = "PreOrdMarginCalculation";
 	private String backoffClientProfile = "BackoffClientProfile";

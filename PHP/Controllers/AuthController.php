@@ -160,13 +160,13 @@ class AuthController
                        );
 
         $bodyArry=array('ClientCode'=>$this->aesEncryption->encrypt(CLIENT_CODE),
-                        'Password'=>PASSWORD_ENCYPTED_CLIENT_LOGIN,
+                        'Password'=>$this->aesEncryption->encrypt(PASSWORD_ENCYPTED_CLIENT_LOGIN),
                         'HDSerialNumber'=>'asdf',
                         'MACAddress'=>'asdf',
                         'MachineID'=>'asfdasdf',
                         'VersionNo'=>VERSION_NO,
                         'RequestNo'=>1,
-                        'My2PIN'=>'{GET FROM IIFL & DO AES ENCRYPT IF NOT THEN $this->aesEncryption->encrypt($data) BY THIS}',
+                        'My2PIN'=>$this->aesEncryption->encrypt(MY2PIN),
                         'ConnectionType'=>1,
                         'LocalIP'=>'192.168.88.41',
                         'PublicIP'=>'192.168.88.42',

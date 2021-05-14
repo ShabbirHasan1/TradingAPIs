@@ -9,14 +9,14 @@ define("KEY", "{GET FROM IIFL}");
 define("OS_NAME", "Android");
 define("USER_ID", "{GET FROM IIFL}");
 define("PASSWORD", "{GET FROM IIFL}");
-define("PASSWORD_ENCYPTED_CLIENT_LOGIN", "{GET FROM IIFL}");
 define("VERSION_NO", "1.0.16.0");
 define("OCP_KEY", "{GET FROM IIFL}");
 define("ENCRYPT_KEY", "{GET FROM IIFL}");
 define('AES_256_CBC', 'aes-256-cbc');
 define('AES_IV', [83, 71, 26, 58, 54, 35, 22, 11, 83, 71, 26, 58, 54, 35, 22, 11]);
-define('CLIENT_CODE', '{GET FROM IIFL}');
-
+define('CLIENT_CODE', '{GET FROM IIFL}'); //Client Code of IIFL Trading Account
+define("PASSWORD_ENCYPTED_CLIENT_LOGIN", "{GET FROM IIFL}"); //Password of IIFL Trading Account
+define("MY2PIN", "{GET FROM IIFL}"); //Date of Birth in YYYYMMDD format
 /*
 NOTE: Got cooki in Client login api response's header & set in cooki or session & use for other api call by passing it into header like 'Cookie: IIFLMarcookie=5mqlulw3dr5mzhg5nhozy5v2'
 Here We have set as  define Constant & use in default header.

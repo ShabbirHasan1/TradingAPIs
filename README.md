@@ -17,7 +17,9 @@ The complete API reference document is available [here](https://api.iiflsecuriti
 
 ## Usage
 
-To begin using this API, Please Signup [here](https://eaccount.indiainfoline.com/)
+To begin using this API,
+Please Signup [here](https://eaccount.indiainfoline.com/) if you don't have an IIFL trading account.
+Generate Keys [here](https://ttweb.indiainfoline.com/trade/login.aspx) if you have an existing IIFL trading account.
 
 
 ## Contact us

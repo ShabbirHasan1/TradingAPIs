@@ -26,16 +26,17 @@ pip install -r requirement.txt
 
 ##### Ones project dependency is installed, follow following step to run the program
 
-```python3.6 manage.py runserver  0.0.0.0:8080```
- >application will start in http://localhost:8080 
+```python manage.py runserver  0.0.0.0:8000```
+ >application will start in http://localhost:8000 
 
-Sample post data has been attached with file name : ```Insomnia_2020-10-07.json``` please import it in postman/insomnia
+Sample post data has been attached with file name : ```Insomnia.json``` please import it in postman/insomnia
 
 #### location of main Apis
 > /open_apis/views.py
 
 ### Running Application procedure:
-  - Vendor credentials has been added in offline file ```configuration.ini```, please change the file accordingly
+  - Vendor/Client credentials has been added in offline file ```configuration.ini```, please change the file accordingly
+  - Update encryption key provided by IIFL in the common_utils/auth.py which contains encryption logic
   - After vendor login you will get cookie as response, please add the cookie manually in /open_apis/views.py with key name cookie_ as per provided example:
  ``` cookie_ = 'kpkk5weaq3e5opiuetauakry'```
 
