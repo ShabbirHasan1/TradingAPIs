@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     path('loginRequestMobileForVendor/', views.loginRequestMobileForVendor, name='loginRequestMobileForVendor'),
     path('LoginRequestV2/', views.LoginRequestV2, name='LoginRequestV2'),
+    path('JWTOpenApiValidation/', views.JWTOpenApiValidation, name='JWTOpenApiValidation'),
     path('OrderRequest/', views.OrderRequest, name='OrderRequest'),
     path('PlaceSMOOrder/', views.PlaceSMOOrder, name='PlaceSMOOrder'),
     path('AdvanceModifySMOOrder/', views.AdvanceModifySMOOrder, name='AdvanceModifySMOOrder'),
@@ -18,6 +19,7 @@ urlpatterns = [
     path('NetPositionNetWiseV1/', views.NetPositionNetWiseV1, name='NetPositionNetWiseV1'),
     path('OrderStatus/', views.OrderStatus, name='OrderStatus'),
     path('MarketFeed/', views.MarketFeed, name='MarketFeed'),
+    path('HistoricalCandles/', views.HistoricalCandles, name='HistoricalCandles'),
     path('BackoffClientProfile/', views.BackoffClientProfile, name='BackoffClientProfile'),
     path('BackoffEquitytransaction/', views.BackoffEquitytransaction, name='BackoffEquitytransaction'),
     path('BackoffFutureTransaction/', views.BackoffFutureTransaction, name='BackoffFutureTransaction'),

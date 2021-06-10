@@ -12,3 +12,9 @@ History
 ------------------
 
 * Included Back Office APIs for Transactions and Client Profile.
+
+
+2.1.0 (2021-06-03)
+------------------
+
+* Included API for fetching historical candle data.

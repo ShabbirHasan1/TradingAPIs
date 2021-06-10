@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "f4348c37-79b4-45fc-aa5b-2ea3805b3550",
+		"_postman_id": "b9d4ce4c-f8c0-404b-a6fb-761d0f8462c4",
 		"name": "Open APIs IIFL Securities",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -25,7 +25,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/LoginRequestMobileForVendor"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/LoginRequestMobileForVendor",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"LoginRequestMobileForVendor"
+					]
+				}
 			},
 			"response": []
 		},
@@ -42,14 +55,64 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n   \"head\":{\r\n      \"requestCode\":\"IIFLMarRQLoginRequestV2\",\r\n      \"key\":\"userKey\",\r\n      \"appVer\":\"appVer\",\r\n      \"appName\":\"appName\",\r\n      \"osName\":\"OsName\",\r\n      \"userId\":\"userID\",\r\n      \"password\":\"password\"\r\n   },\r\n   \"body\":{\r\n      \"ClientCode\":\"encryptedClientCode\",\r\n      \"Password\":\"encryptedPassword\",\r\n      \"HDSerialNumber\":\"asdf\",\r\n      \"MACAddress\":\"asdf\",\r\n      \"MachineID\":\"asfdasdf\",\r\n      \"VersionNo\":\"1.0.16.0\",\r\n      \"RequestNo\":1,\r\n      \"My2PIN\":\"encryptedMy2PIN\",\r\n      \"ConnectionType\":1,\r\n      \"LocalIP\":\"192.168.88.41\",\r\n      \"PublicIP\":\"192.168.88.42\"\r\n   }\r\n}",
+					"raw": "{\r\n   \"head\":{\r\n      \"requestCode\":\"IIFLMarRQLoginRequestV4\",\r\n      \"key\":\"userKey\",\r\n      \"appVer\":\"appVer\",\r\n      \"appName\":\"appName\",\r\n      \"osName\":\"OsName\",\r\n      \"userId\":\"userID\",\r\n      \"password\":\"password\"\r\n   },\r\n   \"body\":{\r\n      \"ClientCode\":\"encryptedClientCode\",\r\n      \"Password\":\"encryptedPassword\",\r\n      \"HDSerialNumber\":\"asdf\",\r\n      \"MACAddress\":\"asdf\",\r\n      \"MachineID\":\"asfdasdf\",\r\n      \"VersionNo\":\"1.0.16.0\",\r\n      \"RequestNo\":1,\r\n      \"My2PIN\":\"encryptedMy2PIN\",\r\n      \"ConnectionType\":1,\r\n      \"LocalIP\":\"192.168.88.41\",\r\n      \"PublicIP\":\"192.168.88.42\"\r\n   }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/LoginRequest"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/LoginRequest",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"LoginRequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "JWTOpenApiValidation",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"ClientCode\": \"client_code\",\r\n \"JwtCode\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ik1BWUFOQ0hJIiwicm9sZSI6IjYwIiwibmJmIjoxNjIyNTQ3MjkwLCJleHAiOjE2MjI1NTA4OTAsImlhdCI6MTYyMjU0NzI5MH0.Sz_DvU0LeolPdJHegcPtg_ZkW51_6MVQH5mARQFlzvI\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/JWTOpenApiValidation",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"JWTOpenApiValidation"
+					]
+				}
 			},
 			"response": []
 		},
@@ -73,7 +136,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/Holding"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/Holding",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"Holding"
+					]
+				}
 			},
 			"response": []
 		},
@@ -97,7 +173,75 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/MarketFeed"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/MarketFeed",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"MarketFeed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET HISTORICAL DATA",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-clientcode",
+						"value": " client_code",
+						"type": "text"
+					},
+					{
+						"key": "x-auth-token",
+						"value": " eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ik1BWUFOQ0hJIiwicm9sZSI6IjYwIiwibmJmIjoxNjIyNTQ3MjkwLCJleHAiOjE2MjI1NTA4OTAsImlhdCI6MTYyMjU0NzI5MH0.Sz_DvU0LeolPdJHegcPtg_ZkW51_6MVQH5mARQFlzvI",
+						"type": "text"
+					},
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": " fc714d8e5b82438a93a95baa493ff45b",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/historical/n/c/1333/1d?from=2021-04-29&end=2021-04-30",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"historical",
+						"n",
+						"c",
+						"1333",
+						"1d"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "2021-04-29"
+						},
+						{
+							"key": "end",
+							"value": "2021-04-30"
+						}
+					]
+				}
 			},
 			"response": []
 		},
@@ -121,7 +265,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/OrderRequest"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/OrderRequest",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"OrderRequest"
+					]
+				}
 			},
 			"response": []
 		},
@@ -145,7 +302,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/PlaceSMOOrder"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/PlaceSMOOrder",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"PlaceSMOOrder"
+					]
+				}
 			},
 			"response": []
 		},
@@ -169,7 +339,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/AdvanceModifySMOOrder"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/AdvanceModifySMOOrder",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"AdvanceModifySMOOrder"
+					]
+				}
 			},
 			"response": []
 		},
@@ -193,7 +376,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/OrderStatus"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/OrderStatus",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"OrderStatus"
+					]
+				}
 			},
 			"response": []
 		},
@@ -217,7 +413,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/TradeInformation"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/TradeInformation",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"TradeInformation"
+					]
+				}
 			},
 			"response": []
 		},
@@ -241,7 +450,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/Margin"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/Margin",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"Margin"
+					]
+				}
 			},
 			"response": []
 		},
@@ -265,7 +487,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/OrderBookV2"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/OrderBookV2",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"OrderBookV2"
+					]
+				}
 			},
 			"response": []
 		},
@@ -289,7 +524,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/TradeBook"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/TradeBook",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"TradeBook"
+					]
+				}
 			},
 			"response": []
 		},
@@ -313,7 +561,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/NetPosition"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/NetPosition",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"NetPosition"
+					]
+				}
 			},
 			"response": []
 		},
@@ -337,7 +598,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/NetPositionNetWise"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/NetPositionNetWise",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"NetPositionNetWise"
+					]
+				}
 			},
 			"response": []
 		},
@@ -361,7 +635,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/PreOrdMarginCalculation"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/PreOrdMarginCalculation",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"PreOrdMarginCalculation"
+					]
+				}
 			},
 			"response": []
 		},
@@ -385,7 +672,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/BackoffMutualFundTransaction"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/BackoffMutualFundTransaction",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"BackoffMutualFundTransaction"
+					]
+				}
 			},
 			"response": []
 		},
@@ -409,7 +709,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/BackoffClientProfile"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/BackoffClientProfile",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"BackoffClientProfile"
+					]
+				}
 			},
 			"response": []
 		},
@@ -433,7 +746,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/BackoffEquitytransaction"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/BackoffEquitytransaction",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"BackoffEquitytransaction"
+					]
+				}
 			},
 			"response": []
 		},
@@ -457,7 +783,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/BackoffFutureTransaction"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/BackoffFutureTransaction",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"BackoffFutureTransaction"
+					]
+				}
 			},
 			"response": []
 		},
@@ -481,7 +820,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/BackoffoptionTransaction"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/BackoffoptionTransaction",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"BackoffoptionTransaction"
+					]
+				}
 			},
 			"response": []
 		},
@@ -505,7 +857,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/BackoffLedger"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/BackoffLedger",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"BackoffLedger"
+					]
+				}
 			},
 			"response": []
 		},
@@ -529,7 +894,20 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/BackoffDPTransaction"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/BackoffDPTransaction",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"BackoffDPTransaction"
+					]
+				}
 			},
 			"response": []
 		},
@@ -553,10 +931,22 @@
 						}
 					}
 				},
-				"url": "https://dataservice.iifl.in/openapi/prod/BackoffDPHolding"
+				"url": {
+					"raw": "https://dataservice.iifl.in/openapi/prod/BackoffDPHolding",
+					"protocol": "https",
+					"host": [
+						"dataservice",
+						"iifl",
+						"in"
+					],
+					"path": [
+						"openapi",
+						"prod",
+						"BackoffDPHolding"
+					]
+				}
 			},
 			"response": []
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }

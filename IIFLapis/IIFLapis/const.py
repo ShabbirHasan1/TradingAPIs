@@ -8,7 +8,19 @@ import datetime
 HEADERS = {
     'Content-Type': 'application/json',
     'Ocp-Apim-Subscription-Key': OCP_KEY
-    }
+}
+
+HISTORICAL_CANDLE_HEADERS = {
+    'Content-Type': 'application/json',
+    'Ocp-Apim-Subscription-Key': OCP_KEY,
+    'x-clientcode': '',   
+    'x-auth-token': '' 
+}
+
+JWT_PAYLOAD = {
+    "ClientCode": "",
+    "JwtCode": ""    
+}
 
 GENERIC_PAYLOAD = {
     "head": {

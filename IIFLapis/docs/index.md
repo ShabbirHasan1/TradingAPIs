@@ -2,7 +2,6 @@
 
 Python SDK for IIFL Trading APIs
 
-![IIFL logo](images/iifl-logo.png)
 
 ### Features
 

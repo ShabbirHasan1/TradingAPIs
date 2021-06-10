@@ -24,6 +24,18 @@ def write_cookie(cookie):
     f.write(cookie)
     f.close()
 
+def get_jwt():
+    jwt_path = dir_path+'/jwt.txt'
+    f = open(jwt_path,'r')
+    jwt_ = f.readline()
+    f.close()
+    return jwt_
+
+def write_jwt(jwt):
+    jwt_path = dir_path+'/jwt.txt'
+    f = open(jwt_path,'w')
+    f.write(jwt)
+    f.close()
 
 auth = auth.EncryptionClient()
 

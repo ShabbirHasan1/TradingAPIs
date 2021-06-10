@@ -14,6 +14,7 @@ http = urllib3.PoolManager()
 env = common_util.get_env()
 
 cookie_=common_util.get_cookie()
+jwt_=common_util.get_jwt()
 
 AppSource = env.get('credentials', 'AppSource')
 
@@ -107,7 +108,7 @@ def LoginRequestV2(requests):
             }
             payload = {
                 "head": {
-                        "requestCode": "IIFLMarRQLoginForVendor",
+                        "requestCode": "IIFLMarRQLoginRequestV4",
                         "key": UserKey,
                         "appVer": "1.0",
                         "appName": AppName,
@@ -129,15 +130,17 @@ def LoginRequestV2(requests):
                     "PublicIP": "192.168.88.42"
                  }
             }
-            print (payload)
+
             cookies = req.cookies.RequestsCookieJar()
             cookies.set('IIFLMarcookie', cookie_, domain = 'dataservice.iifl.in')
             resp = req.post(url = url, headers = header, data = json.dumps(payload), cookies = cookies)
             
+
             if not resp.status_code == 200:
                 raise common_util.custom_exceptions.UserException(ref_strings.Common.bad_response)
 
             resp = json.loads(resp.text)
+            common_util.write_jwt(resp['body']['Token'])
             return common_util.send_sucess_message(resp)
 
     except custom_exceptions.UserException as e:
@@ -934,6 +937,91 @@ def MarketFeed(requests):
         print(error)
         return common_util.send_error_message()
 
+@csrf_exempt
+def JWTOpenApiValidation(requests):
+    try:
+        if requests.method == 'POST':
+            post_data = json.loads(requests.body)
+
+            UserKey = env.get('credentials', 'UserKey')
+            AppName = env.get('credentials', 'AppName')
+            UserId = env.get('credentials', 'UserId')
+            Password = env.get('credentials', 'Password')
+            EncryKey = env.get('credentials', 'EncryKey')
+            OAS_key = env.get('credentials', 'Ocp-Apim-Subscription-Key')
+            
+            payload = {
+                "ClientCode": post_data.get('ClientCode'),
+                "JwtCode": jwt_
+            }
+
+            url = env.get('urls', 'JWTOpenApiValidation')
+            header = {
+                "Content-Type": "application/json",
+                "Ocp-Apim-Subscription-Key": OAS_key
+            }
+
+            cookies = req.cookies.RequestsCookieJar()
+            cookies.set('IIFLMarcookie', cookie_, domain = 'dataservice.iifl.in')
+            resp = req.post(url = url, headers = header, data = json.dumps(payload), cookies = cookies)
+
+            if not resp.status_code == 200:
+                raise common_util.custom_exceptions.UserException(ref_strings.Common.bad_response)
+
+            resp = json.loads(resp.text)
+            return common_util.send_sucess_message(resp)
+
+    except custom_exceptions.UserException as e:
+        return common_util.send_sucess_message({'msg': str(e)})
+    except Exception as e:
+        error = common_util.get_error_traceback(sys, e)
+        print(error)
+        return common_util.send_error_message()
+
+@csrf_exempt
+def HistoricalCandles(requests):
+    try:
+        if requests.method == 'GET':
+            get_data = json.loads(requests.body)
+
+            UserKey = env.get('credentials', 'UserKey')
+            AppName = env.get('credentials', 'AppName')
+            UserId = env.get('credentials', 'UserId')
+            Password = env.get('credentials', 'Password')
+            EncryKey = env.get('credentials', 'EncryKey')
+            OAS_key = env.get('credentials', 'Ocp-Apim-Subscription-Key')
+            
+            url = env.get('urls', 'HistoricalCandles')
+            url = url + get_data.get('Exch') + "/"
+            url = url + get_data.get('ExchType') + "/"
+            url = url + get_data.get('ScripCode') + "/"
+            url = url + get_data.get('Interval') + "?from="
+            url = url + get_data.get('FromDate') + "&end="
+            url = url + get_data.get('EndDate')
+            
+            header = {
+                "Content-Type": "application/json",
+                "Ocp-Apim-Subscription-Key": OAS_key,
+                "x-clientcode": get_data.get('ClientCode'),
+                "x-auth-token": jwt_
+            }
+
+            cookies = req.cookies.RequestsCookieJar()
+            cookies.set('IIFLMarcookie', cookie_, domain = 'dataservice.iifl.in')
+            resp = req.get(url = url, headers = header, cookies = cookies)
+
+            if not resp.status_code == 200:
+                raise common_util.custom_exceptions.UserException(ref_strings.Common.bad_response)
+
+            resp = json.loads(resp.text)
+            return common_util.send_sucess_message(resp)
+
+    except custom_exceptions.UserException as e:
+        return common_util.send_sucess_message({'msg': str(e)})
+    except Exception as e:
+        error = common_util.get_error_traceback(sys, e)
+        print(error)
+        return common_util.send_error_message()
 
 
 @csrf_exempt

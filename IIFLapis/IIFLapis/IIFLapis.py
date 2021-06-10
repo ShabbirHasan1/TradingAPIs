@@ -1,6 +1,6 @@
 import requests
 from .auth import EncryptionClient
-from .const import GENERIC_PAYLOAD, CUSTOMER_LOGIN_PAYLOAD, PARTNER_LOGIN_PAYLOAD, ORDER_PAYLOAD, HEADERS, NEXT_DAY_TIMESTAMP, TODAY_TIMESTAMP
+from .const import GENERIC_PAYLOAD, JWT_PAYLOAD, CUSTOMER_LOGIN_PAYLOAD, PARTNER_LOGIN_PAYLOAD, ORDER_PAYLOAD, HISTORICAL_CANDLE_HEADERS, HEADERS, NEXT_DAY_TIMESTAMP, TODAY_TIMESTAMP
 from .conf import APP_SOURCE
 from .order import Order, OrderType, OrderFor
 from .logging import log_response
@@ -13,6 +13,7 @@ class IIFLClient:
 
     CUSTOMER_LOGIN_ROUTE = "https://dataservice.iifl.in/openapi/prod/LoginRequest"
     PARTNER_LOGIN_ROUTE = "https://dataservice.iifl.in/openapi/prod/LoginRequestMobileForVendor"
+    JWT_VALIDATION_ROUTE = "https://dataservice.iifl.in/openapi/prod/JWTOpenApiValidation"
     CLIENT_PROFILE_ROUTE="https://dataservice.iifl.in/openapi/prod/BackoffClientProfile"
 
     MARGIN_ROUTE = "https://dataservice.iifl.in/openapi/prod/Margin"
@@ -28,6 +29,7 @@ class IIFLClient:
     TRADE_INFO_ROUTE = "https://dataservice.iifl.in/openapi/prod/TradeInformation"
     
     MARKET_FEED_ROUTE="https://dataservice.iifl.in/openapi/prod/MarketFeed"
+    HISTORICAL_CANDLE_ROUTE = "https://dataservice.iifl.in/openapi/prod/historical/"
     
     EQUITY_TRANSC_ROUTE="https://dataservice.iifl.in/openapi/prod/BackoffEquitytransaction"
     FUTURE_TRANSC_ROUTE="https://dataservice.iifl.in/openapi/prod/BackoffFutureTransaction"
@@ -51,7 +53,7 @@ class IIFLClient:
     DP_TRANS_REQUEST_CODE = "IIFLMarRQBackoffDPTransaction"
     LEDGER_REQUEST_CODE = "IIFLMarRQBackoffLedger"
 
-    def __init__(self, client_code=None, passwd=None, dob=None,email_id=None,contact_number=None):
+    def __init__(self, client_code=None, passwd=None, dob=None,email_id=None,contact_number=None,jwt=None):
         """
         Main constructor for client.
         Expects user's client code, password and date of birth in YYYYMMDD format.
@@ -61,6 +63,7 @@ class IIFLClient:
         self.dob = dob
         self.email_id = email_id
         self.contact_number = contact_number
+        self.jwt = jwt
         self.payload = GENERIC_PAYLOAD
         self.order_payload = ORDER_PAYLOAD
         self.client_login_payload = CUSTOMER_LOGIN_PAYLOAD
@@ -75,9 +78,10 @@ class IIFLClient:
         self.client_login_payload["body"]["ClientCode"] = secret_client_code
         self.client_login_payload["body"]["Password"] = secret_passwd
         self.client_login_payload["body"]["My2PIN"] = secret_dob
-        self.client_login_payload["head"]["requestCode"] = "IIFLMarRQLoginRequestV2"
+        self.client_login_payload["head"]["requestCode"] = "IIFLMarRQLoginRequestV4"
         res = self._login_request_client(self.CUSTOMER_LOGIN_ROUTE)
         message = res["body"]["Msg"]
+        self.jwt = res["body"]["Token"]
         if message == "":
             log_response("Logged in!!")
         else:
@@ -292,6 +296,22 @@ class IIFLClient:
         self.payload["body"]["LastRequestTime"] = f"/Date({TODAY_TIMESTAMP})/"
         self.payload["body"]["RefreshRate"] = "H"
         return self.order_request("MF", client_id, client_id)
+
+    def jwt_validation(self,client_id):
+        jwt_Payload = JWT_PAYLOAD
+        jwt_Payload["ClientCode"] = client_id
+        jwt_Payload["JwtCode"] = self.jwt
+        url = self.JWT_VALIDATION_ROUTE
+        response = self.session.post(url, json=jwt_Payload, headers=HEADERS).json()
+        return response["body"]["Message"]
+
+    def historical_candles(self,exch,exchType,scripcode,interval,fromdate,todate,client_id):
+        historical_headers = HISTORICAL_CANDLE_HEADERS
+        historical_headers["x-clientcode"] = client_id
+        historical_headers["x-auth-token"] = self.jwt
+        url = self.HISTORICAL_CANDLE_ROUTE+exch+"/"+exchType+"/"+scripcode+"/"+interval+"?from="+fromdate+"&end="+todate
+        response = self.session.get(url, headers=historical_headers).json()
+        return response
 
     def set_payload(self, order: Order) -> None:
         self.order_payload["_ReqData"]["body"]["OrderFor"] = order.order_for
